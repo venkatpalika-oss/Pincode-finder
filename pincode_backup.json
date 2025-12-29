@@ -1,0 +1,14 @@
+{
+  "110001": [{
+    "Name": "Connaught Place",
+    "District": "New Delhi",
+    "State": "Delhi",
+    "Pincode": "110001"
+  }],
+  "400001": [{
+    "Name": "Fort",
+    "District": "Mumbai",
+    "State": "Maharashtra",
+    "Pincode": "400001"
+  }]
+}
