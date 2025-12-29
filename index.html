@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Indian Pincode & Area Finder</title>
+  <title>Pincode4U – Find Indian Pincode & Area Details</title>
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
     body {
       background-color: #f7f7f7;
@@ -43,11 +45,21 @@
       background-color: #e9ecef;
     }
   </style>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5644DXJGXX');
+  </script>
+
 </head>
 <body>
 
 <div class="container">
-  <h2 class="text-center">Indian Pincode & Area Finder</h2>
+  <h2 class="text-center">Pincode4U – Find Indian Pincode & Area Details</h2>
   
   <div class="position-relative mb-3">
     <input type="text" id="searchInput" class="form-control" placeholder="Enter Pincode or Area/City" oninput="showSuggestions()">
@@ -61,7 +73,6 @@
 <script>
 let debounceTimer;
 
-// Fetch suggestions as user types
 function showSuggestions() {
   clearTimeout(debounceTimer);
   const input = document.getElementById("searchInput").value.trim();
@@ -91,75 +102,9 @@ function showSuggestions() {
         });
       }
     } catch {}
-  }, 300); // delay 300ms
+  }, 300);
 }
 
-// Main search function
 async function search() {
   const input = document.getElementById("searchInput").value.trim();
-  document.getElementById("suggestions").innerHTML = '';
-  if (!input) {
-    showMessage('danger', 'Please enter a Pincode or Area/City name.');
-    return;
-  }
-
-  showMessage('info', 'Searching...');
-
-  let url = /^\d{6}$/.test(input)
-    ? `https://api.postalpincode.in/pincode/${input}`
-    : `https://api.postalpincode.in/postoffice/${encodeURIComponent(input)}`;
-
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    displayResult(data);
-  } catch {
-    showMessage('danger', 'Error fetching data. Please try again later.');
-  }
-}
-
-// Display results in table
-function displayResult(data) {
-  if (data[0].Status !== "Success") {
-    showMessage('warning', 'No results found.');
-    return;
-  }
-
-  let html = `<table class="table table-bordered table-striped result-table">
-                <thead class="table-dark">
-                  <tr>
-                    <th>Post Office</th>
-                    <th>District</th>
-                    <th>State</th>
-                    <th>Pincode</th>
-                    <th>Map</th>
-                  </tr>
-                </thead>
-                <tbody>`;
-
-  data[0].PostOffice.forEach(po => {
-    html += `<tr>
-               <td>${po.Name}</td>
-               <td>${po.District}</td>
-               <td>${po.State}</td>
-               <td>${po.Pincode}</td>
-               <td><a href="https://www.google.com/maps/search/${po.Name}+${po.District}" target="_blank">View</a></td>
-             </tr>`;
-  });
-
-  html += `</tbody></table>`;
-  document.getElementById("result").innerHTML = html;
-}
-
-// Show alert messages
-function showMessage(type, message) {
-  document.getElementById("result").innerHTML = 
-    `<div class="alert alert-${type} text-center">${message}</div>`;
-}
-</script>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+  document.getElementById("suggestions"
