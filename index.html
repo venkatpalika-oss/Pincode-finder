@@ -71,40 +71,87 @@
 </div>
 
 <script>
-let debounceTimer;
-
-function showSuggestions() {
-  clearTimeout(debounceTimer);
-  const input = document.getElementById("searchInput").value.trim();
-  const suggestionsDiv = document.getElementById("suggestions");
-  suggestionsDiv.innerHTML = '';
-
-  if (!input) return;
-
-  debounceTimer = setTimeout(async () => {
-    try {
-      const url = /^\d{1,6}$/.test(input) 
-        ? `https://api.postalpincode.in/pincode/${input}`
-        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(input)}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data[0].Status === "Success") {
-        data[0].PostOffice.slice(0, 5).forEach(po => {
-          const div = document.createElement('div');
-          div.className = 'autocomplete-suggestion';
-          div.textContent = po.Name;
-          div.onclick = () => {
-            document.getElementById("searchInput").value = po.Name;
-            suggestionsDiv.innerHTML = '';
-            search();
-          };
-          suggestionsDiv.appendChild(div);
-        });
-      }
-    } catch {}
-  }, 300);
-}
-
+<script>
 async function search() {
   const input = document.getElementById("searchInput").value.trim();
-  document.getElementById("suggestions"
+  document.getElementById("suggestions").innerHTML = '';
+
+  if (!input) {
+    showMessage('danger', 'Please enter a Pincode or Area.');
+    return;
+  }
+
+  showMessage('info', 'Searching...');
+
+  let apiURL = /^\d{6}$/.test(input)
+    ? `https://api.postalpincode.in/pincode/${input}`
+    : `https://api.postalpincode.in/postoffice/${encodeURIComponent(input)}`;
+
+  try {
+    const res = await fetch(apiURL, { timeout: 5000 });
+    const data = await res.json();
+
+    if (data[0].Status === "Success") {
+      displayResult(data);
+      return;
+    }
+    throw "API failed";
+  } catch {
+    loadFromBackup(input);
+  }
+}
+
+async function loadFromBackup(pincode) {
+  try {
+    const res = await fetch("pincode_backup.json");
+    const backup = await res.json();
+
+    if (backup[pincode]) {
+      displayResult([{
+        Status: "Success",
+        PostOffice: backup[pincode]
+      }]);
+    } else {
+      showMessage('warning', 'No data found (API & backup).');
+    }
+  } catch {
+    showMessage('danger', 'Service temporarily unavailable.');
+  }
+}
+
+function displayResult(data) {
+  let html = `<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Post Office</th>
+        <th>District</th>
+        <th>State</th>
+        <th>Pincode</th>
+        <th>Map</th>
+      </tr>
+    </thead><tbody>`;
+
+  data[0].PostOffice.forEach(po => {
+    html += `<tr>
+      <td>${po.Name}</td>
+      <td>${po.District}</td>
+      <td>${po.State}</td>
+      <td>${po.Pincode}</td>
+      <td>
+        <a href="https://www.google.com/maps/search/${po.Name}+${po.District}" target="_blank">
+          View
+        </a>
+      </td>
+    </tr>`;
+  });
+
+  html += "</tbody></table>";
+  document.getElementById("result").innerHTML = html;
+}
+
+function showMessage(type, msg) {
+  document.getElementById("result").innerHTML =
+    `<div class="alert alert-${type} text-center">${msg}</div>`;
+}
+</script>
+
