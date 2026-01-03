@@ -50,11 +50,22 @@
     <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
     <div class="result" id="result" aria-live="polite"></div>
-    <div class="adsense" id="adsense-container"></div> <!-- AdSense Slot -->
+    <div class="adsense" id="adsense-container"></div> <!-- Dynamic Ad below results -->
     <div class="error" id="error" aria-live="assertive"></div>
   </main>
 
-  <footer>© 2026 Pincode Finder | Legal & Cached Data</footer>
+  <footer>
+    © 2026 Pincode Finder | Legal & Cached Data
+    <div class="adsense" id="footer-ad">
+      <!-- Footer AdSense Slot -->
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-client="ca-pub-9595967643816732"
+           data-ad-slot="9876543210"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+  </footer>
 
   <script>
     document.getElementById('search').addEventListener('keypress', function(e){
@@ -85,7 +96,7 @@
       if (cached) {
         const offices = JSON.parse(cached);
         displayResult(offices);
-        loadAd(); // Show AdSense
+        loadAd(); // Dynamic ad below results
         return;
       }
 
@@ -108,7 +119,7 @@
         const offices = apiData[0].PostOffice;
         localStorage.setItem(cacheKey, JSON.stringify(offices));
         displayResult(offices);
-        loadAd(); // Show AdSense
+        loadAd(); // Dynamic ad below results
 
       } catch (err) {
         resultDiv.style.display = 'none';
@@ -149,7 +160,6 @@
       alert('Cache cleared!');
     }
 
-    // Function to load Google AdSense below results
     function loadAd() {
       const adsDiv = document.getElementById('adsense-container');
       adsDiv.innerHTML = `
@@ -162,6 +172,9 @@
       `;
       (adsbygoogle = window.adsbygoogle || []).push({});
     }
+
+    // Initialize footer ad
+    (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 
 </body>
