@@ -38,21 +38,50 @@
     .map-container { margin-top:10px; border-radius:6px; overflow:hidden; height:250px; }
     .adsense { margin:20px 0; text-align:center; }
 
-    /* Credit Score Button */
-    .credit-btn {
-      display:block;
-      width:100%;
-      text-align:center;
-      margin-top:20px;
-      padding:14px;
-      background:#198754;
-      color:#fff;
-      font-weight:600;
-      font-size:16px;
-      border-radius:6px;
-      text-decoration:none;
+    /* Credit Score Card */
+    .credit-card {
+      background: #e6f4ea;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 25px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
-    .credit-btn:hover { background:#157347; }
+    .credit-card h2 { color: #198754; margin-bottom:10px; }
+    .credit-card p { margin:5px 0; }
+    .credit-card a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+      background: #198754;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-top:10px;
+      animation: pulse 2.5s infinite;
+    }
+    .credit-card a:hover {
+      background: #157347;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    }
+    .credit-card ul {
+      margin-top:10px;
+      padding-left:18px;
+      font-size:14px;
+      color:#444;
+    }
+
+    /* Pulse Keyframes for Credit Button */
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      50% { transform: scale(1.03); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+      100% { transform: scale(1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    }
   </style>
 </head>
 <body>
@@ -65,13 +94,23 @@
     <button onclick="search()">Search</button>
     <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
-    <!-- Credit Score Button -->
-    <a href="credit-score.html" class="credit-btn">
-      💳 Check Free Credit Score
-    </a>
+    <!-- Embedded Credit Score Section -->
+    <div class="credit-card">
+      <h2>💳 Check Your Free Credit Score</h2>
+      <p>Know your CIBIL score instantly. Safe, secure, and free via Paisabazaar.</p>
+      <a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
+        💳 Check Free Credit Score
+      </a>
+      <ul>
+        <li>✔ No impact on your credit score</li>
+        <li>✔ Used by millions in India</li>
+        <li>✔ RBI-regulated credit bureaus</li>
+        <li>✔ We do not store your data</li>
+      </ul>
+    </div>
 
     <div class="result" id="result" aria-live="polite"></div>
-    <div class="adsense" id="adsense-container"></div> <!-- Dynamic Ad below results -->
+    <div class="adsense" id="adsense-container"></div>
     <div class="error" id="error" aria-live="assertive"></div>
   </main>
 
@@ -101,7 +140,7 @@
       resultDiv.style.display = 'block';
       resultDiv.innerHTML = 'Fetching data...';
       errorDiv.textContent = '';
-      adsDiv.innerHTML = ''; // Clear previous ad
+      adsDiv.innerHTML = '';
 
       if (!query) {
         resultDiv.style.display = 'none';
@@ -116,7 +155,7 @@
       if (cached) {
         const offices = JSON.parse(cached);
         displayResult(offices);
-        loadAd(); // Dynamic ad below results
+        loadAd();
         return;
       }
 
@@ -139,7 +178,7 @@
         const offices = apiData[0].PostOffice;
         localStorage.setItem(cacheKey, JSON.stringify(offices));
         displayResult(offices);
-        loadAd(); // Dynamic ad below results
+        loadAd();
 
       } catch (err) {
         resultDiv.style.display = 'none';
@@ -193,7 +232,6 @@
       (adsbygoogle = window.adsbygoogle || []).push({});
     }
 
-    // Initialize footer ad
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 
