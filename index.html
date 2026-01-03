@@ -2,102 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Indian Pincode Finder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="description" content="Search Indian pincodes using official public data sources. Fast, accurate and reliable pincode finder." />
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: #f4f6f8;
-      padding: 40px;
+      margin: 0;
+      padding: 0;
     }
     .container {
-      max-width: 500px;
-      margin: auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 720px;
+      margin: 80px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 14px;
     }
     input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
     button {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
+      margin-top: 15px;
+      padding: 14px;
       font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
     }
+    button:hover {
+      background: #0056b3;
+    }
     .result {
-      margin-top: 20px;
-      padding: 15px;
-      background: #eef2f5;
-      border-radius: 6px;
+      margin-top: 25px;
+      padding: 20px;
+      background: #f1f5ff;
+      border-radius: 8px;
+      display: none;
     }
     .error {
+      margin-top: 20px;
       color: red;
       text-align: center;
-      margin-top: 15px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #777;
+      font-size: 14px;
     }
   </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Pincode Finder</h1>
 
-    <input type="text" id="pincode" placeholder="Enter 6-digit pincode" maxlength="6">
+  <div class="container">
+    <h1>Indian Pincode Finder</h1>
+    <div class="subtitle">Powered by public postal data (Hybrid model)</div>
+
+    <input type="text" id="pincode" placeholder="Enter 6-digit Pincode" maxlength="6" />
     <button onclick="searchPincode()">Search</button>
 
-    <div id="output"></div>
+    <div class="result" id="result"></div>
+    <div class="error" id="error"></div>
   </div>
 
-<script>
-async function searchPincode() {
-  const pin = document.getElementById("pincode").value.trim();
-  const output = document.getElementById("output");
-  output.innerHTML = "";
+  <footer>
+    © 2026 Pincode Finder | Legal & Reliable Data Usage
+  </footer>
 
-  if (!/^[0-9]{6}$/.test(pin)) {
-    output.innerHTML = '<div class="error">Please enter a valid 6-digit pincode</div>';
-    return;
-  }
+  <script>
+    async function searchPincode() {
+      const pin = document.getElementById('pincode').value.trim();
+      const resultDiv = document.getElementById('result');
+      const errorDiv = document.getElementById('error');
 
-  const prefix = pin.substring(0, 2);   // ex: 11, 50, 59
-  const filePath = `data/${prefix}.json`;
+      resultDiv.style.display = 'none';
+      errorDiv.textContent = '';
 
-  try {
-    const response = await fetch(filePath);
-    if (!response.ok) throw new Error("File not found");
+      if (!/^\d{6}$/.test(pin)) {
+        errorDiv.textContent = 'Please enter a valid 6-digit pincode.';
+        return;
+      }
 
-    const data = await response.json();
+      try {
+        // LEGAL PUBLIC API (no scraping)
+        const response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        if (!response.ok) throw new Error('API error');
 
-    if (!data[pin]) {
-      output.innerHTML = '<div class="error">Pincode not found</div>';
-      return;
+        const apiData = await response.json();
+
+        if (apiData[0].Status !== 'Success') {
+          errorDiv.textContent = 'Pincode not found.';
+          return;
+        }
+
+        const office = apiData[0].PostOffice[0];
+
+        resultDiv.innerHTML = `
+          <strong>Pincode:</strong> ${office.Pincode}<br><br>
+          <strong>Post Office:</strong> ${office.Name}<br>
+          <strong>District:</strong> ${office.District}<br>
+          <strong>State:</strong> ${office.State}<br>
+          <strong>Branch Type:</strong> ${office.BranchType}
+        `;
+
+        resultDiv.style.display = 'block';
+
+        // HYBRID READY:
+        // Here we can later cache this response to JSON or backend
+
+      } catch (err) {
+        errorDiv.textContent = 'Unable to fetch pincode data. Please try again later.';
+      }
     }
+  </script>
 
-    const info = data[pin];
-
-    output.innerHTML = `
-      <div class="result">
-        <strong>Pincode:</strong> ${pin}<br>
-        <strong>Office:</strong> ${info.office || "-"}<br>
-        <strong>District:</strong> ${info.district || "-"}<br>
-        <strong>State:</strong> ${info.state || "-"}
-      </div>
-    `;
-  } catch (err) {
-    output.innerHTML = '<div class="error">Data file missing or corrupted</div>';
-  }
-}
-</script>
 </body>
 </html>
