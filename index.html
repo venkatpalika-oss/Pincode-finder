@@ -3,112 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <title>Indian Pincode Finder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f4f6f8;
-      padding: 30px;
+      padding: 40px;
     }
-    .box {
+    .container {
       max-width: 500px;
       margin: auto;
       background: #fff;
-      padding: 20px;
+      padding: 25px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
     input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
-      margin-bottom: 10px;
     }
     button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
+      margin-top: 10px;
       font-size: 16px;
-      background: #007bff;
-      color: #fff;
-      border: none;
       cursor: pointer;
     }
-    button:hover {
-      background: #0056b3;
-    }
     .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef2f5;
+      border-radius: 6px;
+    }
+    .error {
+      color: red;
+      text-align: center;
       margin-top: 15px;
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <h1>Pincode Finder</h1>
 
-<div class="box">
-  <h2>Indian Pincode Finder</h2>
+    <input type="text" id="pincode" placeholder="Enter 6-digit pincode" maxlength="6">
+    <button onclick="searchPincode()">Search</button>
 
-  <input
-    type="text"
-    id="pincode"
-    placeholder="Enter 6-digit pincode"
-    maxlength="6"
-  />
-
-  <button onclick="searchPincode()">Search</button>
-
-  <div id="result" class="result"></div>
-</div>
+    <div id="output"></div>
+  </div>
 
 <script>
-function searchPincode() {
+async function searchPincode() {
   const pin = document.getElementById("pincode").value.trim();
-  const result = document.getElementById("result");
+  const output = document.getElementById("output");
+  output.innerHTML = "";
 
-  result.innerHTML = "";
-
-  // Validation
-  if (!/^\d{6}$/.test(pin)) {
-    result.innerHTML = "❌ Please enter a valid 6-digit pincode.";
+  if (!/^[0-9]{6}$/.test(pin)) {
+    output.innerHTML = '<div class="error">Please enter a valid 6-digit pincode</div>';
     return;
   }
 
-  const prefix = pin.substring(0, 2); // 11, 50, 59, etc
+  const prefix = pin.substring(0, 2);   // ex: 11, 50, 59
+  const filePath = `data/${prefix}.json`;
 
-  fetch(`data/${prefix}.json`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Prefix file not found");
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (!data[pin]) {
-        result.innerHTML = "❌ Pincode not found.";
-        return;
-      }
+  try {
+    const response = await fetch(filePath);
+    if (!response.ok) throw new Error("File not found");
 
-      let html = "<h3>Results:</h3>";
+    const data = await response.json();
 
-      data[pin].forEach(item => {
-        html += `
-          <p>
-            <strong>Office:</strong> ${item.Name}<br>
-            <strong>District:</strong> ${item.District}<br>
-            <strong>State:</strong> ${item.State}<br>
-            <strong>Pincode:</strong> ${item.Pincode}
-          </p>
-          <hr>
-        `;
-      });
+    if (!data[pin]) {
+      output.innerHTML = '<div class="error">Pincode not found</div>';
+      return;
+    }
 
-      result.innerHTML = html;
-    })
-    .catch(() => {
-      result.innerHTML = "❌ Data file not available for this pincode.";
-    });
+    const info = data[pin];
+
+    output.innerHTML = `
+      <div class="result">
+        <strong>Pincode:</strong> ${pin}<br>
+        <strong>Office:</strong> ${info.office || "-"}<br>
+        <strong>District:</strong> ${info.district || "-"}<br>
+        <strong>State:</strong> ${info.state || "-"}
+      </div>
+    `;
+  } catch (err) {
+    output.innerHTML = '<div class="error">Data file missing or corrupted</div>';
+  }
 }
 </script>
-
 </body>
 </html>
