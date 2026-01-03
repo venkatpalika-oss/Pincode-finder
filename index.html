@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Indian Pincode Finder</title>
-  <meta name="description" content="Search Indian pincodes using official public data sources. Fast, accurate and reliable pincode finder." />
+  <meta name="description" content="Search Indian pincodes using official public data sources. Fast, accurate, and cached for better performance." />
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -76,7 +76,7 @@
 
   <div class="container">
     <h1>Indian Pincode Finder</h1>
-    <div class="subtitle">Powered by public postal data (Hybrid model)</div>
+    <div class="subtitle">Powered by public postal data (Hybrid model with caching)</div>
 
     <input type="text" id="pincode" placeholder="Enter 6-digit Pincode" maxlength="6" />
     <button onclick="searchPincode()">Search</button>
@@ -86,7 +86,7 @@
   </div>
 
   <footer>
-    © 2026 Pincode Finder | Legal & Reliable Data Usage
+    © 2026 Pincode Finder | Legal & Cached Data
   </footer>
 
   <script>
@@ -103,8 +103,16 @@
         return;
       }
 
+      // Check Local Storage cache
+      const cached = localStorage.getItem(`pincode_${pin}`);
+      if (cached) {
+        const office = JSON.parse(cached);
+        displayResult(office);
+        return;
+      }
+
       try {
-        // LEGAL PUBLIC API (no scraping)
+        // Legal Public API call
         const response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
         if (!response.ok) throw new Error('API error');
 
@@ -117,22 +125,26 @@
 
         const office = apiData[0].PostOffice[0];
 
-        resultDiv.innerHTML = `
-          <strong>Pincode:</strong> ${office.Pincode}<br><br>
-          <strong>Post Office:</strong> ${office.Name}<br>
-          <strong>District:</strong> ${office.District}<br>
-          <strong>State:</strong> ${office.State}<br>
-          <strong>Branch Type:</strong> ${office.BranchType}
-        `;
+        // Cache in Local Storage
+        localStorage.setItem(`pincode_${pin}`, JSON.stringify(office));
 
-        resultDiv.style.display = 'block';
-
-        // HYBRID READY:
-        // Here we can later cache this response to JSON or backend
+        displayResult(office);
 
       } catch (err) {
         errorDiv.textContent = 'Unable to fetch pincode data. Please try again later.';
       }
+    }
+
+    function displayResult(office) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `
+        <strong>Pincode:</strong> ${office.Pincode}<br><br>
+        <strong>Post Office:</strong> ${office.Name}<br>
+        <strong>District:</strong> ${office.District}<br>
+        <strong>State:</strong> ${office.State}<br>
+        <strong>Branch Type:</strong> ${office.BranchType}
+      `;
+      resultDiv.style.display = 'block';
     }
   </script>
 
