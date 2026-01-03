@@ -32,34 +32,57 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
-    h1, h2 {
-      color: #0a58ca;
-    }
-    .cta {
-      display: inline-block;
-      background: #198754;
-      color: #fff;
-      padding: 14px 22px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 18px;
-      margin-top: 10px;
-    }
-    .cta:hover {
-      background: #157347;
-    }
-    ul {
-      padding-left: 18px;
-    }
+    h1, h2 { color: #0a58ca; }
+    ul, ol { padding-left: 20px; }
     footer {
       text-align: center;
       font-size: 14px;
       padding: 15px;
       background: #eef2f7;
     }
-    .disclaimer {
-      font-size: 13px;
-      color: #666;
+    .disclaimer { font-size: 13px; color: #666; }
+
+    /* Affiliate button */
+    .aff-btn {
+      display: block;
+      padding: 16px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      background: #0a58ca;
+      margin-top: 15px;
+    }
+    .aff-btn:hover { opacity: 0.9; }
+
+    .trust-list { font-size: 14px; color: #444; margin-top: 10px; }
+
+    /* Sticky bottom CTA */
+    .sticky-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #0a58ca;
+      text-align: center;
+      padding: 12px;
+      z-index: 9999;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+    }
+    .sticky-cta a {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 12px 20px;
+      background: #198754;
+      border-radius: 6px;
+    }
+    .sticky-cta a:hover { background: #157347; }
+    @media(max-width:600px){
+      .sticky-cta a { font-size:16px; padding:10px 14px; }
     }
   </style>
 </head>
@@ -94,19 +117,29 @@
   <div class="card">
     <h2>Check Credit Score for Free</h2>
     <p>
-      Click the button below to securely check your credit score from trusted and authorized platforms.
+      Click the button below to securely check your credit score instantly from Paisabazaar.
     </p>
 
-    <!-- Replace links with your affiliate links -->
-    <a class="cta" href="https://www.cibil.com/" target="_blank" rel="nofollow">
-      Check Credit Score Now
+    <a class="aff-btn" href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
+      ✅ Paisabazaar – FREE Credit Score (2 Min)
     </a>
+
+    <ul class="trust-list">
+      <li>✔ No impact on your credit score</li>
+      <li>✔ Used by millions in India</li>
+      <li>✔ RBI-regulated credit bureaus</li>
+      <li>✔ We do not store your data</li>
+    </ul>
+
+    <p style="font-size:14px;color:#b02a37;margin-top:10px;">
+      ⚠ Many banks check your score before loan approval. Know yours today.
+    </p>
   </div>
 
   <div class="card">
     <h2>How It Works</h2>
     <ol>
-      <li>Click on “Check Credit Score Now”</li>
+      <li>Click the Paisabazaar button above</li>
       <li>You will be redirected to a secure partner website</li>
       <li>Enter details as requested by the partner</li>
       <li>View your credit score instantly</li>
@@ -124,15 +157,36 @@
   <div class="card disclaimer">
     <strong>Disclaimer:</strong><br>
     This website does not provide credit reports or calculate credit scores.
-    Users are redirected to third-party platforms for credit score checking.
+    Users are redirected to Paisabazaar for credit score checking.
     We do not collect PAN, Aadhaar, OTP, or any sensitive personal data.
   </div>
 
 </div>
 
+<!-- Sticky CTA -->
+<div class="sticky-cta">
+  <a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
+    ✅ Check Free Credit Score Now
+  </a>
+</div>
+
 <footer>
   © 2026 YourWebsiteName.com | All rights reserved
 </footer>
+
+<script>
+  // Track affiliate clicks with Google Analytics
+  document.querySelectorAll('.aff-btn, .sticky-cta a').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (window.gtag) {
+        gtag('event', 'affiliate_click', {
+          event_category: 'Credit Score',
+          event_label: btn.textContent
+        });
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
