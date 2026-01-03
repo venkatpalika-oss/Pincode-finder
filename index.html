@@ -157,12 +157,15 @@
         return;
       }
 
+      // Check Local Storage cache
       const cached = localStorage.getItem(`pincode_${pin}`);
       if (cached) {
-        displayResult(JSON.parse(cached));
+        const office = JSON.parse(cached);
+        displayResult(office);
         return;
       }
 
+      // Offline fallback: try local JSON (optional: implement later)
       if (!navigator.onLine) {
         errorDiv.textContent = 'Offline: This pincode is not cached yet.';
         return;
@@ -182,6 +185,7 @@
         const office = apiData[0].PostOffice[0];
         localStorage.setItem(`pincode_${pin}`, JSON.stringify(office));
         displayResult(office);
+
       } catch (err) {
         errorDiv.textContent = 'Unable to fetch pincode data. Please try again later.';
         document.title = 'Indian Pincode Finder';
@@ -192,8 +196,10 @@
       const resultDiv = document.getElementById('result');
       const mapDiv = document.getElementById('map');
 
+      // Update dynamic SEO: title and meta description
       document.title = `${office.Pincode} - ${office.Name} | Indian Pincode Finder`;
-      document.querySelector('meta[name="description"]').setAttribute('content', `${office.Pincode}: ${office.Name}, ${office.District}, ${office.State}. Find post office details and branch type.`);
+      let metaDesc = document.querySelector('meta[name="description"]');
+      metaDesc.setAttribute('content', `${office.Pincode}: ${office.Name}, ${office.District}, ${office.State}. Find post office details and branch type.`);
 
       resultDiv.innerHTML = `
         <h2>${office.Name} (${office.Pincode})</h2>
@@ -213,6 +219,7 @@
       `;
       resultDiv.style.display = 'block';
 
+      // Initialize map if not exists
       mapDiv.style.display = 'block';
       if (!map) {
         map = L.map('map').setView([20.5937, 78.9629], 5);
@@ -222,12 +229,14 @@
         }).addTo(map);
       }
 
+      // Geocode pincode to get coordinates
       fetch(`https://nominatim.openstreetmap.org/search?format=json&postalcode=${office.Pincode}&country=India&limit=1`)
         .then(res => res.json())
         .then(data => {
           if (data && data.length > 0) {
             const lat = parseFloat(data[0].lat);
             const lon = parseFloat(data[0].lon);
+
             if (marker) map.removeLayer(marker);
             marker = L.marker([lat, lon]).addTo(map);
             map.setView([lat, lon], 13);
