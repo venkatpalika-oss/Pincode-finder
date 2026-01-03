@@ -30,11 +30,29 @@
     input { width: 100%; padding: 14px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; }
     button { width: 100%; margin-top: 15px; padding: 14px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
     button:hover { background: #0056b3; }
+    .clear-cache { background: #28a745; }
+    .clear-cache:hover { background: #1e7e34; }
+
+    /* Credit Score Button */
+    .credit-btn {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      padding: 14px;
+      background: #198754;
+      color: #ffffff;
+      font-size: 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .credit-btn:hover {
+      background: #157347;
+    }
+
     .result { margin-top: 25px; padding: 20px; background: #f1f5ff; border-radius: 8px; display: none; }
     .error { margin-top: 20px; color: red; text-align: center; }
     footer { text-align: center; margin-top: 40px; color: #777; font-size: 14px; }
-    .clear-cache { margin-top: 10px; background: #28a745; }
-    .clear-cache:hover { background: #1e7e34; }
     .map-container { margin-top:10px; border-radius:6px; overflow:hidden; height:250px; }
     .adsense { margin:20px 0; text-align:center; }
   </style>
@@ -49,15 +67,19 @@
     <button onclick="search()">Search</button>
     <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
+    <!-- ✅ Credit Score Button -->
+    <a href="credit-score.html" class="credit-btn">
+      💳 Check Free Credit Score
+    </a>
+
     <div class="result" id="result" aria-live="polite"></div>
-    <div class="adsense" id="adsense-container"></div> <!-- Dynamic Ad below results -->
+    <div class="adsense" id="adsense-container"></div>
     <div class="error" id="error" aria-live="assertive"></div>
   </main>
 
   <footer>
     © 2026 Pincode Finder | Legal & Cached Data
     <div class="adsense" id="footer-ad">
-      <!-- Footer AdSense Slot -->
       <ins class="adsbygoogle"
            style="display:block; text-align:center;"
            data-ad-client="ca-pub-9595967643816732"
@@ -81,7 +103,7 @@
       resultDiv.style.display = 'block';
       resultDiv.innerHTML = 'Fetching data...';
       errorDiv.textContent = '';
-      adsDiv.innerHTML = ''; // Clear previous ad
+      adsDiv.innerHTML = '';
 
       if (!query) {
         resultDiv.style.display = 'none';
@@ -94,9 +116,8 @@
 
       const cached = localStorage.getItem(cacheKey);
       if (cached) {
-        const offices = JSON.parse(cached);
-        displayResult(offices);
-        loadAd(); // Dynamic ad below results
+        displayResult(JSON.parse(cached));
+        loadAd();
         return;
       }
 
@@ -106,53 +127,41 @@
           : `https://api.postalpincode.in/postoffice/${encodeURIComponent(query)}`;
 
         const response = await fetch(url);
-        if (!response.ok) throw new Error('API error');
-
         const apiData = await response.json();
 
-        if (apiData[0].Status !== 'Success' || !apiData[0].PostOffice || apiData[0].PostOffice.length === 0) {
+        if (apiData[0].Status !== 'Success') {
           resultDiv.style.display = 'none';
           errorDiv.textContent = 'No results found.';
           return;
         }
 
-        const offices = apiData[0].PostOffice;
-        localStorage.setItem(cacheKey, JSON.stringify(offices));
-        displayResult(offices);
-        loadAd(); // Dynamic ad below results
-
-      } catch (err) {
+        localStorage.setItem(cacheKey, JSON.stringify(apiData[0].PostOffice));
+        displayResult(apiData[0].PostOffice);
+        loadAd();
+      } catch {
         resultDiv.style.display = 'none';
-        errorDiv.textContent = 'Unable to fetch data. Please try again later.';
+        errorDiv.textContent = 'Unable to fetch data.';
       }
     }
 
     function displayResult(offices) {
       const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = offices.map(office => `
+      resultDiv.innerHTML = offices.map(o => `
         <div style="margin-bottom:20px;">
-          <strong>Pincode:</strong> ${office.Pincode}<br>
-          <strong>Post Office:</strong> ${office.Name}<br>
-          <strong>District:</strong> ${office.District}<br>
-          <strong>State:</strong> ${office.State}<br>
-          <strong>Branch Type:</strong> ${office.BranchType}<br>
-          <button onclick="showMap('${office.Name}, ${office.District}, ${office.State}', '${office.Pincode}')">
-            Show Map
-          </button>
-          <div id="map-${office.Pincode}" class="map-container"></div>
+          <strong>Pincode:</strong> ${o.Pincode}<br>
+          <strong>Post Office:</strong> ${o.Name}<br>
+          <strong>District:</strong> ${o.District}<br>
+          <strong>State:</strong> ${o.State}<br>
+          <button onclick="showMap('${o.Name}, ${o.District}, ${o.State}', '${o.Pincode}')">Show Map</button>
+          <div id="map-${o.Pincode}" class="map-container"></div>
         </div>
       `).join('');
       resultDiv.style.display = 'block';
     }
 
-    function showMap(location, pin) {
-      const mapDiv = document.getElementById(`map-${pin}`);
-      mapDiv.innerHTML = `<iframe
-        loading="lazy"
-        allowfullscreen
-        src="https://www.google.com/maps?q=${encodeURIComponent(location)}&output=embed">
-      </iframe>`;
-      mapDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    function showMap(loc, pin) {
+      document.getElementById(`map-${pin}`).innerHTML =
+        `<iframe loading="lazy" src="https://www.google.com/maps?q=${encodeURIComponent(loc)}&output=embed"></iframe>`;
     }
 
     function clearCache() {
@@ -161,19 +170,11 @@
     }
 
     function loadAd() {
-      const adsDiv = document.getElementById('adsense-container');
-      adsDiv.innerHTML = `
-        <ins class="adsbygoogle"
-             style="display:block; text-align:center;"
-             data-ad-client="ca-pub-9595967643816732"
-             data-ad-slot="1234567890"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-      `;
+      document.getElementById('adsense-container').innerHTML =
+        `<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9595967643816732" data-ad-slot="1234567890" data-ad-format="auto"></ins>`;
       (adsbygoogle = window.adsbygoogle || []).push({});
     }
 
-    // Initialize footer ad
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 
