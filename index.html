@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Indian Pincode Finder</title>
-  <meta name="description" content="Search Indian pincodes using official public data sources. Fast, accurate, and cached for better performance." />
+  <title>Indian Pincode & Place Finder</title>
+  <meta name="description" content="Search Indian pincodes or place names using official public postal data. Fast, accurate, and cached for better performance." />
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -14,99 +14,48 @@
     }
     main.container {
       max-width: 720px;
-      margin: 80px auto;
-      background: #ffffff;
+      margin: 60px auto;
+      background: #fff;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: #333;
-    }
-    h2.subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 25px;
-      font-size: 14px;
-    }
-    input {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      width: 100%;
-      margin-top: 15px;
-      padding: 14px;
-      font-size: 16px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .result {
-      margin-top: 25px;
-      padding: 20px;
-      background: #f1f5ff;
-      border-radius: 8px;
-      display: none;
-    }
-    .error {
-      margin-top: 20px;
-      color: red;
-      text-align: center;
-    }
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      color: #777;
-      font-size: 14px;
-    }
-    .clear-cache {
-      margin-top: 10px;
-      background: #28a745;
-    }
-    .clear-cache:hover {
-      background: #1e7e34;
-    }
-    iframe {
-      border: 0;
-      width: 100%;
-      height: 250px;
-      margin-top: 15px;
-      border-radius: 6px;
-    }
+    h1 { text-align: center; margin-bottom: 10px; color: #333; }
+    h2.subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; }
+    input { width: 100%; padding: 14px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; }
+    button { width: 100%; margin-top: 15px; padding: 14px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .result { margin-top: 25px; padding: 20px; background: #f1f5ff; border-radius: 8px; display: none; }
+    .error { margin-top: 20px; color: red; text-align: center; }
+    footer { text-align: center; margin-top: 40px; color: #777; font-size: 14px; }
+    .clear-cache { margin-top: 10px; background: #28a745; }
+    .clear-cache:hover { background: #1e7e34; }
+    .map-container { margin-top:10px; border-radius:6px; overflow:hidden; height:250px; }
   </style>
 </head>
 <body>
 
   <main class="container">
-    <h1>Indian Pincode Finder</h1>
-    <h2 class="subtitle">Powered by public postal data (Hybrid model with caching)</h2>
+    <h1>Indian Pincode & Place Finder</h1>
+    <h2 class="subtitle">Search by Pincode or Place Name (Hybrid with caching)</h2>
 
-    <input type="text" id="pincode" placeholder="Enter 6-digit Pincode" maxlength="6" aria-label="Enter 6-digit pincode"/>
-    <button onclick="searchPincode()">Search</button>
+    <input type="text" id="search" placeholder="Enter 6-digit Pincode or Place Name" aria-label="Enter pincode or place"/>
+    <button onclick="search()">Search</button>
     <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
-    <div class="result" id="result"></div>
-    <div class="error" id="error"></div>
+    <div class="result" id="result" aria-live="polite"></div>
+    <div class="error" id="error" aria-live="assertive"></div>
   </main>
 
-  <footer>
-    © 2026 Pincode Finder | Legal & Cached Data
-  </footer>
+  <footer>© 2026 Pincode Finder | Legal & Cached Data</footer>
 
   <script>
-    async function searchPincode() {
-      const pin = document.getElementById('pincode').value.trim();
+    document.getElementById('search').addEventListener('keypress', function(e){
+      if(e.key === 'Enter') search();
+    });
+
+    async function search() {
+      const query = document.getElementById('search').value.trim();
       const resultDiv = document.getElementById('result');
       const errorDiv = document.getElementById('error');
 
@@ -114,14 +63,17 @@
       resultDiv.innerHTML = 'Fetching data...';
       errorDiv.textContent = '';
 
-      if (!/^\d{6}$/.test(pin)) {
+      if (!query) {
         resultDiv.style.display = 'none';
-        errorDiv.textContent = 'Please enter a valid 6-digit pincode.';
+        errorDiv.textContent = 'Please enter a pincode or place name.';
         return;
       }
 
-      // Check Local Storage cache
-      const cached = localStorage.getItem(`pincode_${pin}`);
+      const isPincode = /^\d{6}$/.test(query);
+      const cacheKey = isPincode ? `pincode_${query}` : `place_${query.toLowerCase()}`;
+
+      // Check cache
+      const cached = localStorage.getItem(cacheKey);
       if (cached) {
         const offices = JSON.parse(cached);
         displayResult(offices);
@@ -129,26 +81,28 @@
       }
 
       try {
-        const response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        const url = isPincode
+          ? `https://api.postalpincode.in/pincode/${query}`
+          : `https://api.postalpincode.in/postoffice/${encodeURIComponent(query)}`;
+
+        const response = await fetch(url);
         if (!response.ok) throw new Error('API error');
 
         const apiData = await response.json();
-        if (apiData[0].Status !== 'Success') {
+
+        if (apiData[0].Status !== 'Success' || !apiData[0].PostOffice || apiData[0].PostOffice.length === 0) {
           resultDiv.style.display = 'none';
-          errorDiv.textContent = 'Pincode not found.';
+          errorDiv.textContent = 'No results found.';
           return;
         }
 
         const offices = apiData[0].PostOffice;
-
-        // Cache all offices in local storage
-        localStorage.setItem(`pincode_${pin}`, JSON.stringify(offices));
-
+        localStorage.setItem(cacheKey, JSON.stringify(offices));
         displayResult(offices);
 
       } catch (err) {
         resultDiv.style.display = 'none';
-        errorDiv.textContent = 'Unable to fetch pincode data. Please try again later.';
+        errorDiv.textContent = 'Unable to fetch data. Please try again later.';
       }
     }
 
@@ -160,15 +114,25 @@
           <strong>Post Office:</strong> ${office.Name}<br>
           <strong>District:</strong> ${office.District}<br>
           <strong>State:</strong> ${office.State}<br>
-          <strong>Branch Type:</strong> ${office.BranchType}
-          <iframe 
-            loading="lazy"
-            allowfullscreen
-            src="https://www.google.com/maps?q=${encodeURIComponent(office.Name + ', ' + office.District + ', ' + office.State)}&output=embed">
-          </iframe>
+          <strong>Branch Type:</strong> ${office.BranchType}<br>
+          <button onclick="showMap('${office.Name}, ${office.District}, ${office.State}', '${office.Pincode}')">
+            Show Map
+          </button>
+          <div id="map-${office.Pincode}" class="map-container"></div>
         </div>
       `).join('');
       resultDiv.style.display = 'block';
+    }
+
+    function showMap(location, pin) {
+      const mapDiv = document.getElementById(`map-${pin}`);
+      mapDiv.innerHTML = `<iframe
+        loading="lazy"
+        allowfullscreen
+        src="https://www.google.com/maps?q=${encodeURIComponent(location)}&output=embed">
+      </iframe>`;
+      // Scroll to map
+      mapDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function clearCache() {
