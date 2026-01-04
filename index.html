@@ -4,237 +4,152 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pincode, ZIP & Postal Code Finder | Global Lookup</title>
-<meta name="description" content="Search postal codes worldwide. Find Indian PIN codes, US ZIP codes, UK postcodes, Canada, Australia & more instantly.">
+<title>Global Postal Code Finder | India Pincode, US ZIP, UK Postcode</title>
+<meta name="description" content="Search India pincodes, US ZIP codes, UK postcodes, and international postal codes instantly. Accurate, fast, and free postal code lookup.">
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
-crossorigin="anonymous"></script>
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732" crossorigin="anonymous"></script>
 
 <style>
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background:#f4f6f8;
-  margin:0;
-}
-.wrapper {
-  display:flex;
-  max-width:1200px;
-  margin:40px auto;
-  gap:20px;
-  padding:0 15px;
-}
-main {
-  flex:3;
-  background:#fff;
-  padding:25px;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,.1);
-}
-aside { flex:1; }
+body {font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0}
+.container{max-width:900px;margin:50px auto;background:#fff;padding:30px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+h1{text-align:center}
+.subtitle{text-align:center;color:#666;font-size:14px}
+input,button{width:100%;padding:14px;font-size:16px;border-radius:6px}
+input{border:1px solid #ccc}
+button{margin-top:12px;background:#007bff;color:#fff;border:none;cursor:pointer}
+button:hover{background:#0056b3}
+.result{margin-top:20px}
+.card{background:#f1f5ff;padding:15px;border-radius:8px;margin-bottom:12px;cursor:pointer}
+.card strong{font-size:16px}
+.details{display:none;margin-top:10px}
+.map{height:220px;margin-top:10px}
+.map iframe{width:100%;height:100%;border:0}
+.error{text-align:center;color:red;margin-top:15px}
 
-h1 { text-align:center; color:#333; }
-.subtitle { text-align:center; color:#666; font-size:14px; margin-bottom:20px; }
-
-input, select, button {
-  width:100%;
-  padding:14px;
-  font-size:16px;
-  border-radius:6px;
-  margin-top:10px;
+/* Credit score desktop */
+.credit-side{
+position:fixed;right:20px;top:120px;width:260px;
+background:#e6f4ea;padding:15px;border-radius:10px;
+box-shadow:0 4px 8px rgba(0,0,0,.15)
 }
-input, select { border:1px solid #ccc; }
-button {
-  background:#007bff;
-  color:#fff;
-  border:none;
-  cursor:pointer;
-}
-button:hover { background:#0056b3; }
-
-.list-item {
-  padding:12px;
-  border-bottom:1px solid #ddd;
-  cursor:pointer;
-}
-.list-item:hover { background:#f1f5ff; }
-
-.result-box {
-  margin-top:15px;
-  background:#f1f5ff;
-  padding:15px;
-  border-radius:8px;
-}
-
-.map { margin-top:10px; height:250px; }
-.map iframe { width:100%; height:100%; border:0; }
-
-.error { color:red; margin-top:15px; text-align:center; }
-
-/* Credit Score */
-.credit-card {
-  background:#e6f4ea;
-  padding:20px;
-  border-radius:8px;
-}
-.credit-card h3 { color:#198754; }
-.credit-card a {
-  display:block;
-  margin-top:12px;
-  padding:12px;
-  background:#198754;
-  color:#fff;
-  text-align:center;
-  text-decoration:none;
-  border-radius:6px;
-  font-weight:bold;
+.credit-side a{
+display:block;text-align:center;background:#198754;color:#fff;
+padding:14px;border-radius:6px;text-decoration:none;font-weight:600;
+animation:pulse 2.5s infinite
 }
 
 /* Mobile CTA */
-.mobile-cta { display:none; }
-@media (max-width:768px) {
-  .wrapper { flex-direction:column; }
-  aside { display:none; }
+.mobile-cta{
+display:none;position:fixed;bottom:0;left:0;right:0;
+background:#198754;color:#fff;text-align:center;padding:14px;
+font-weight:600
+}
 
-  .mobile-cta {
-    display:flex;
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:#198754;
-    color:#fff;
-    padding:12px 15px;
-    justify-content:space-between;
-    align-items:center;
-    z-index:9999;
-  }
-  .mobile-cta a {
-    background:#fff;
-    color:#198754;
-    padding:10px 14px;
-    border-radius:6px;
-    text-decoration:none;
-    font-weight:bold;
-  }
-  body { padding-bottom:70px; }
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.05)}
+100%{transform:scale(1)}
+}
+
+@media(max-width:900px){
+.credit-side{display:none}
+.mobile-cta{display:block}
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="container">
+<h1>🌍 Global Postal Code Finder</h1>
+<p class="subtitle">India Pincode • US ZIP • UK Postcode • International</p>
 
-<main>
-<h1>Global Postal Code Finder</h1>
-<p class="subtitle">India PIN • US ZIP • UK • Canada • Australia • Europe • Japan</p>
-
-<select id="country">
-  <option value="IN">India</option>
-  <option value="US">United States</option>
-  <option value="CA">Canada</option>
-  <option value="GB">United Kingdom</option>
-  <option value="AU">Australia</option>
-  <option value="DE">Germany</option>
-  <option value="FR">France</option>
-  <option value="IT">Italy</option>
-  <option value="ES">Spain</option>
-  <option value="NL">Netherlands</option>
-  <option value="NZ">New Zealand</option>
-  <option value="JP">Japan</option>
-</select>
-
-<input id="query" placeholder="Enter Postal Code or City">
+<input id="q" placeholder="Enter pincode, zip code, postcode, or city">
 <button onclick="search()">Search</button>
 
-<div id="list"></div>
-<div id="details"></div>
+<div id="result" class="result"></div>
 <div id="error" class="error"></div>
-</main>
-
-<aside>
-  <div class="credit-card">
-    <h3>💳 Free Credit Score</h3>
-    <p style="font-size:14px;">
-      Check your CIBIL credit score instantly – free & secure.
-    </p>
-    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-       target="_blank" rel="nofollow sponsored">
-      Check Free Credit Score
-    </a>
-  </div>
-</aside>
-
 </div>
 
-<div class="mobile-cta">
-  <span>💳 Free Credit Score</span>
-  <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-     target="_blank" rel="nofollow sponsored">
-    Check Now
-  </a>
+<!-- Credit Score Desktop -->
+<div class="credit-side">
+<h3>💳 Free Credit Score</h3>
+<a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
+Check Now
+</a>
 </div>
+
+<!-- Mobile CTA -->
+<a class="mobile-cta" href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank">
+💳 Check Free Credit Score
+</a>
 
 <script>
-async function search() {
-  const q = document.getElementById("query").value.trim();
-  const country = document.getElementById("country").value;
-  const list = document.getElementById("list");
-  const details = document.getElementById("details");
-  const error = document.getElementById("error");
-
-  list.innerHTML = "";
-  details.innerHTML = "";
-  error.textContent = "";
-
-  if (!q) return;
-
-  try {
-    if (country === "IN") {
-      const isPin = /^\d{6}$/.test(q);
-      const url = isPin
-        ? `https://api.postalpincode.in/pincode/${q}`
-        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
-
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data[0].Status !== "Success") throw "No data";
-
-      data[0].PostOffice.forEach(o => {
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.textContent = `${o.Name}, ${o.District} (${o.Pincode})`;
-        div.onclick = () => showDetails(o.Name, o.District + ", " + o.State);
-        list.appendChild(div);
-      });
-
-    } else {
-      const res = await fetch(`https://api.zippopotam.us/${country}/${q}`);
-      const data = await res.json();
-
-      data.places.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.textContent = `${p["place name"]}, ${p.state}`;
-        div.onclick = () => showDetails(p["place name"], p.state);
-        list.appendChild(div);
-      });
-    }
-  } catch {
-    error.textContent = "No results found.";
-  }
+function detectCountry(q){
+if(/^\d{6}$/.test(q)) return "IN";
+if(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i.test(q)) return "GB";
+if(/^\d{5}$/.test(q)) return "US";
+if(/^[A-Z]\d[A-Z] ?\d[A-Z]\d$/i.test(q)) return "CA";
+return "IN";
 }
 
-function showDetails(place, region) {
-  document.getElementById("details").innerHTML = `
-    <div class="result-box">
-      <strong>${place}</strong><br>${region}
-      <div class="map">
-        <iframe loading="lazy"
-          src="https://www.google.com/maps?q=${encodeURIComponent(place + ',' + region)}&output=embed">
-        </iframe>
-      </div>
-    </div>`;
+async function search(){
+const q=document.getElementById("q").value.trim();
+const res=document.getElementById("result");
+const err=document.getElementById("error");
+res.innerHTML=""; err.textContent="";
+if(!q) return;
+
+try{
+const country=detectCountry(q);
+let data;
+
+if(country==="IN"){
+const url=/^\d{6}$/.test(q)
+?`https://api.postalpincode.in/pincode/${q}`
+:`https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
+data=await (await fetch(url)).json();
+if(data[0].Status!=="Success") throw "";
+renderIndia(data[0].PostOffice);
+}else{
+const url=`https://api.zippopotam.us/${country}/${q}`;
+data=await (await fetch(url)).json();
+renderIntl(data);
+}
+}catch{
+err.textContent="No results found.";
+}
+}
+
+function renderIndia(list){
+result.innerHTML=list.map(o=>`
+<div class="card" onclick="this.querySelector('.details').style.display =
+this.querySelector('.details').style.display==='block'?'none':'block'">
+<strong>${o.Name} – ${o.Pincode}</strong><br>
+${o.District}, ${o.State}
+<div class="details">
+<div class="map">
+<iframe loading="lazy"
+src="https://www.google.com/maps?q=${encodeURIComponent(o.Name+','+o.District)}&output=embed">
+</iframe>
+</div>
+</div>
+</div>
+`).join("");
+}
+
+function renderIntl(d){
+result.innerHTML=`
+<div class="card">
+<strong>${d['post code']}</strong><br>
+${d.places[0]['place name']}, ${d.places[0].state}
+<div class="map">
+<iframe loading="lazy"
+src="https://www.google.com/maps?q=${encodeURIComponent(d.places[0]['place name']+','+d.places[0].state)}&output=embed">
+</iframe>
+</div>
+</div>`;
 }
 </script>
 
