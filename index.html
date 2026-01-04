@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pincode & ZIP Code Finder | India & USA</title>
-<meta name="description" content="Search Indian PIN codes and US ZIP codes. Find post office, city, state, and location details instantly.">
+<title>Pincode & ZIP Code Finder | India & USA Postal Lookup</title>
+<meta name="description" content="Search Indian PIN codes and US ZIP codes by city or area. Get post office, district, state, and location details instantly.">
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
@@ -41,7 +41,7 @@ aside {
 
 /* Headings */
 h1 { text-align:center; color:#333; }
-.subtitle { text-align:center; color:#666; font-size:14px; }
+.subtitle { text-align:center; color:#666; font-size:14px; margin-bottom:20px; }
 
 /* Inputs */
 input, select, button {
@@ -53,6 +53,7 @@ input, select, button {
 }
 
 input, select { border:1px solid #ccc; }
+
 button {
   background:#007bff;
   color:#fff;
@@ -61,14 +62,17 @@ button {
 }
 button:hover { background:#0056b3; }
 
-/* Results */
+/* Result list */
 .list-item {
   padding:12px;
   border-bottom:1px solid #ddd;
   cursor:pointer;
 }
-.list-item:hover { background:#f1f5ff; }
+.list-item:hover {
+  background:#f1f5ff;
+}
 
+/* Details */
 .result-box {
   margin-top:15px;
   background:#f1f5ff;
@@ -86,7 +90,11 @@ button:hover { background:#0056b3; }
   border:0;
 }
 
-.error { color:red; margin-top:15px; text-align:center; }
+.error {
+  color:red;
+  margin-top:15px;
+  text-align:center;
+}
 
 /* Credit Card */
 .credit-card {
@@ -95,11 +103,18 @@ button:hover { background:#0056b3; }
   border-radius:8px;
   box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
-.credit-card h3 { color:#198754; }
+.credit-card h3 {
+  color:#198754;
+  margin-bottom:10px;
+}
+.credit-card p {
+  font-size:14px;
+  color:#333;
+}
 .credit-card a {
   display:block;
   text-align:center;
-  margin-top:10px;
+  margin-top:12px;
   padding:12px;
   background:#198754;
   color:#fff;
@@ -109,11 +124,17 @@ button:hover { background:#0056b3; }
 }
 
 /* Mobile CTA */
-.mobile-cta { display:none; }
+.mobile-cta {
+  display:none;
+}
 
 @media (max-width:768px) {
-  .wrapper { flex-direction:column; }
-  aside { display:none; }
+  .wrapper {
+    flex-direction:column;
+  }
+  aside {
+    display:none;
+  }
 
   .mobile-cta {
     display:flex;
@@ -123,7 +144,7 @@ button:hover { background:#0056b3; }
     width:100%;
     background:#198754;
     color:#fff;
-    padding:12px;
+    padding:12px 15px;
     justify-content:space-between;
     align-items:center;
     z-index:9999;
@@ -136,7 +157,10 @@ button:hover { background:#0056b3; }
     text-decoration:none;
     font-weight:bold;
   }
-  body { padding-bottom:70px; }
+
+  body {
+    padding-bottom:70px;
+  }
 }
 </style>
 </head>
@@ -146,38 +170,40 @@ button:hover { background:#0056b3; }
 <div class="wrapper">
 
 <main>
-<h1>Pincode & ZIP Code Finder</h1>
-<p class="subtitle">India PIN codes & US ZIP codes</p>
+  <h1>Pincode & ZIP Code Finder</h1>
+  <p class="subtitle">Search India PIN codes & US ZIP codes by city or area</p>
 
-<select id="country">
-  <option value="IN">India</option>
-  <option value="US">United States</option>
-</select>
+  <select id="country">
+    <option value="IN">India</option>
+    <option value="US">United States</option>
+  </select>
 
-<input id="query" placeholder="Enter Pincode, ZIP or City">
-<button onclick="search()">Search</button>
+  <input id="query" placeholder="Enter Pincode, ZIP Code or City name">
+  <button onclick="search()">Search</button>
 
-<div id="list"></div>
-<div id="details"></div>
-<div id="error" class="error"></div>
+  <div id="list"></div>
+  <div id="details"></div>
+  <div id="error" class="error"></div>
 </main>
 
+<!-- Desktop Credit Score -->
 <aside>
-<div class="credit-card">
-  <h3>💳 Free Credit Score</h3>
-  <p style="font-size:14px;">
-    Check your CIBIL score instantly for free.
-  </p>
-  <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-     target="_blank" rel="nofollow sponsored">
-    Check Now
-  </a>
-</div>
+  <div class="credit-card">
+    <h3>💳 Free Credit Score</h3>
+    <p>
+      Check your CIBIL credit score instantly.  
+      100% free & secure via Paisabazaar.
+    </p>
+    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
+       target="_blank" rel="nofollow sponsored">
+      Check Free Credit Score
+    </a>
+  </div>
 </aside>
 
 </div>
 
-<!-- Mobile CTA -->
+<!-- Mobile Sticky CTA -->
 <div class="mobile-cta">
   <span>💳 Free Credit Score</span>
   <a href="https://www.paisabazaar.com/?affid=PB005260220213"
@@ -205,17 +231,17 @@ async function search() {
       const isPin = /^\d{6}$/.test(q);
       const url = isPin
         ? `https://api.postalpincode.in/pincode/${q}`
-        : `https://api.postalpincode.in/postoffice/${q}`;
+        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
 
       const res = await fetch(url);
       const data = await res.json();
 
-      if (data[0].Status !== "Success") throw "No data";
+      if (!data[0] || data[0].Status !== "Success") throw "No data";
 
       data[0].PostOffice.forEach(o => {
         const div = document.createElement("div");
         div.className = "list-item";
-        div.innerText = `${o.Name}, ${o.District}`;
+        div.textContent = `${o.Name}, ${o.District} (${o.Pincode})`;
         div.onclick = () => showIndia(o);
         list.appendChild(div);
       });
@@ -227,7 +253,7 @@ async function search() {
       data.places.forEach(p => {
         const div = document.createElement("div");
         div.className = "list-item";
-        div.innerText = `${p["place name"]}, ${p.state}`;
+        div.textContent = `${p["place name"]}, ${p.state}`;
         div.onclick = () => showUS(p);
         list.appendChild(div);
       });
@@ -238,10 +264,11 @@ async function search() {
 }
 
 function showIndia(o) {
-  details.innerHTML = `
+  document.getElementById("details").innerHTML = `
     <div class="result-box">
       <strong>${o.Name}</strong><br>
-      ${o.District}, ${o.State}
+      ${o.District}, ${o.State}<br>
+      PIN Code: ${o.Pincode}
       <div class="map">
         <iframe loading="lazy"
           src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District)}&output=embed">
@@ -251,7 +278,7 @@ function showIndia(o) {
 }
 
 function showUS(p) {
-  details.innerHTML = `
+  document.getElementById("details").innerHTML = `
     <div class="result-box">
       <strong>${p["place name"]}</strong><br>
       ${p.state}
