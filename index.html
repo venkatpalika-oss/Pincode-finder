@@ -5,19 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Global Postal Code Finder | India PIN, ZIP & Postcode</title>
-<meta name="description"
-content="Find Indian PIN codes and international ZIP / postal codes with country selection, flags, and maps. Free & fast lookup.">
+<meta name="description" content="Find Indian PIN codes and international ZIP / postal codes by city or code. Free global postal lookup with maps.">
 
 <!-- Google AdSense -->
-<script async
-src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
 crossorigin="anonymous"></script>
 
 <style>
 body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0}
 .container{max-width:900px;margin:40px auto;background:#fff;padding:25px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
 h1{text-align:center}
-.subtitle{text-align:center;color:#666;font-size:14px;margin-bottom:20px}
+.subtitle{text-align:center;color:#666;font-size:14px;margin-bottom:15px}
 
 select,input,button{
   width:100%;padding:14px;font-size:16px;border-radius:6px;margin-top:10px
@@ -27,36 +25,14 @@ button{background:#007bff;color:#fff;border:none;cursor:pointer}
 button:hover{background:#0056b3}
 
 .card{
-  padding:12px;border-bottom:1px solid #ddd;cursor:pointer
+  padding:14px;border-bottom:1px solid #ddd;cursor:pointer
 }
 .card:hover{background:#f1f5ff}
 
+.map{height:240px;margin-top:10px}
+.map iframe{width:100%;height:100%;border:0}
+
 .error{text-align:center;color:red;margin-top:15px}
-
-/* Credit score */
-.credit-side{
-position:fixed;right:20px;top:120px;width:260px;
-background:#e6f4ea;padding:15px;border-radius:10px;
-box-shadow:0 4px 8px rgba(0,0,0,.15)
-}
-.credit-side a{
-display:block;background:#198754;color:#fff;
-padding:14px;border-radius:6px;text-align:center;
-text-decoration:none;font-weight:600
-}
-
-/* Mobile CTA */
-.mobile-cta{
-display:none;position:fixed;bottom:0;left:0;right:0;
-background:#198754;color:#fff;text-align:center;
-padding:14px;font-weight:600;text-decoration:none
-}
-
-@media(max-width:900px){
-.credit-side{display:none}
-.mobile-cta{display:block}
-body{padding-bottom:70px}
-}
 </style>
 </head>
 
@@ -64,7 +40,7 @@ body{padding-bottom:70px}
 
 <div class="container">
 <h1>🌍 Global Postal Code Finder</h1>
-<p class="subtitle">India PIN • US ZIP • UK Postcode • International</p>
+<p class="subtitle">India PIN • US ZIP • UK • Canada • Australia • Europe</p>
 
 <select id="country">
   <option value="IN">🇮🇳 India</option>
@@ -74,136 +50,83 @@ body{padding-bottom:70px}
   <option value="AU">🇦🇺 Australia</option>
   <option value="DE">🇩🇪 Germany</option>
   <option value="FR">🇫🇷 France</option>
-  <option value="IT">🇮🇹 Italy</option>
-  <option value="ES">🇪🇸 Spain</option>
-  <option value="NL">🇳🇱 Netherlands</option>
   <option value="JP">🇯🇵 Japan</option>
 </select>
 
-<input id="q" placeholder="Start typing Indian city or enter PIN">
+<input id="q" placeholder="Enter city name or postal code">
 <button onclick="search()">Search</button>
 
 <div id="result"></div>
 <div id="error" class="error"></div>
 </div>
 
-<!-- Credit Score Desktop -->
-<div class="credit-side">
-<h3>💳 Free Credit Score</h3>
-<a href="https://www.paisabazaar.com/?affid=PB005260220213"
-target="_blank" rel="nofollow sponsored">
-Check Now
-</a>
-</div>
-
-<!-- Mobile CTA -->
-<a class="mobile-cta"
-href="https://www.paisabazaar.com/?affid=PB005260220213"
-target="_blank" rel="nofollow sponsored">
-💳 Check Free Credit Score
-</a>
-
 <script>
-const qInput = document.getElementById("q");
-const countrySelect = document.getElementById("country");
-const result = document.getElementById("result");
-const error = document.getElementById("error");
-let debounce;
-
-/* UX change */
-countrySelect.addEventListener("change", ()=>{
-  qInput.value="";
-  result.innerHTML="";
-  error.textContent="";
-  qInput.placeholder =
-    countrySelect.value==="IN"
-    ? "Start typing Indian city or enter 6-digit PIN"
-    : "Enter ZIP / Postal Code";
-});
-
-/* Autocomplete for India only */
-qInput.addEventListener("input", ()=>{
-  if(countrySelect.value!=="IN") return;
-  const q=qInput.value.trim();
-  if(q.length<3 || /^\d{6}$/.test(q)) return;
-
-  clearTimeout(debounce);
-  debounce=setTimeout(()=>autoIndia(q),400);
-});
-
-async function autoIndia(q){
-  try{
-    const r=await fetch(`https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`);
-    const d=await r.json();
-    if(d[0].Status!=="Success") return;
-
-    result.innerHTML="";
-    d[0].PostOffice.slice(0,8).forEach(o=>{
-      result.innerHTML+=`
-      <div class="card" onclick="openIndia(
-        '${o.Name}','${o.Pincode}','${o.District}','${o.State}'
-      )">
-      🇮🇳 <strong>${o.Name}</strong><br>
-      ${o.District}, ${o.State}
-      </div>`;
-    });
-  }catch{}
-}
+/* 🔐 OpenCage key – restrict this to your domain */
+const OPENCAGE_KEY = "c5d8ded23d19451a95b3d326d9a28d03";
 
 async function search(){
-  const q=qInput.value.trim();
-  const country=countrySelect.value;
-  result.innerHTML="";
-  error.textContent="";
+  const q = document.getElementById("q").value.trim();
+  const country = document.getElementById("country").value;
+  const result = document.getElementById("result");
+  const error = document.getElementById("error");
+
+  result.innerHTML = "";
+  error.textContent = "";
   if(!q) return;
 
   try{
-    if(country==="IN"){
-      const url=/^\d{6}$/.test(q)
-      ?`https://api.postalpincode.in/pincode/${q}`
-      :`https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
+    /* 🇮🇳 INDIA LOGIC */
+    if(country === "IN"){
+      const url = /^\d{6}$/.test(q)
+        ? `https://api.postalpincode.in/pincode/${q}`
+        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
 
-      const d=await (await fetch(url)).json();
-      if(d[0].Status!=="Success") throw "";
+      const d = await (await fetch(url)).json();
+      if(d[0].Status !== "Success") throw "";
 
       d[0].PostOffice.forEach(o=>{
-        result.innerHTML+=`
-        <div class="card" onclick="openIndia(
-          '${o.Name}','${o.Pincode}','${o.District}','${o.State}'
-        )">
-        🇮🇳 <strong>${o.Name}</strong> – ${o.Pincode}<br>
-        ${o.District}, ${o.State}
-        </div>`;
+        result.innerHTML += `
+          <div class="card">
+            🇮🇳 <strong>${o.Name} – ${o.Pincode}</strong><br>
+            ${o.District}, ${o.State}
+            <div class="map">
+              <iframe loading="lazy"
+                src="https://www.google.com/maps?q=${encodeURIComponent(o.Name+','+o.District)}&output=embed">
+              </iframe>
+            </div>
+          </div>`;
       });
       return;
     }
 
-    const d=await (await fetch(`https://api.zippopotam.us/${country}/${q}`)).json();
-    d.places.forEach(p=>{
-      result.innerHTML+=`
-      <div class="card" onclick="openIntl(
-        '${country}','${q}','${p["place name"]}','${p.state}'
-      )">
-      <strong>${q}</strong><br>
-      ${p["place name"]}, ${p.state}
-      </div>`;
+    /* 🌍 INTERNATIONAL (CITY → POSTAL via OpenCage) */
+    const geoURL = `https://api.opencagedata.com/geocode/v1/json
+      ?q=${encodeURIComponent(q)}
+      &countrycode=${country.toLowerCase()}
+      &key=${OPENCAGE_KEY}
+      &limit=3`;
+
+    const geo = await (await fetch(geoURL)).json();
+    if(!geo.results.length) throw "";
+
+    geo.results.forEach(r=>{
+      const c = r.components;
+      result.innerHTML += `
+        <div class="card">
+          🌍 <strong>${c.postcode || "Postal code not available"}</strong><br>
+          ${c.city || c.town || c.village || q},
+          ${c.state || ""} ${c.country || ""}
+          <div class="map">
+            <iframe loading="lazy"
+              src="https://www.google.com/maps?q=${r.geometry.lat},${r.geometry.lng}&output=embed">
+            </iframe>
+          </div>
+        </div>`;
     });
 
   }catch{
-    error.textContent="No results found.";
+    error.textContent = "No results found.";
   }
-}
-
-function openIndia(name,pin,district,state){
-location.href=`detail.html?country=IN&name=${encodeURIComponent(name)}
-&pin=${pin}&district=${encodeURIComponent(district)}
-&state=${encodeURIComponent(state)}`;
-}
-
-function openIntl(country,pin,place,state){
-location.href=`detail.html?country=${country}&pin=${pin}
-&place=${encodeURIComponent(place)}
-&state=${encodeURIComponent(state)}`;
 }
 </script>
 
