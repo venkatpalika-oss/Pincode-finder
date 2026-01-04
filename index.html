@@ -4,10 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Indian Pincode & Place Finder</title>
-  <meta name="description" content="Search Indian pincodes or place names using official India Post data. Fast, accurate, and free." />
+  <!-- CACHE BUSTING TITLE -->
+  <title>Indian Pincode Finder | Free Credit Score</title>
 
-  <!-- AdSense -->
+  <meta name="description" content="Search Indian pincodes or place names using official India Post data. Check your pincode details and free credit score." />
+
+  <!-- Google AdSense -->
   <script async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
     crossorigin="anonymous"></script>
@@ -15,17 +17,17 @@
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
+      background:#f4f6f8;
+      margin:0;
     }
 
     main.container {
-      max-width: 720px;
-      margin: 60px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width:720px;
+      margin:60px auto;
+      background:#fff;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.1);
     }
 
     h1 { text-align:center; color:#333; }
@@ -84,37 +86,6 @@
       min-height:90px;
     }
 
-    .credit-card {
-      background:#e6f4ea;
-      padding:20px;
-      border-radius:8px;
-      margin-top:25px;
-    }
-
-    .credit-card h2 {
-      color:#198754;
-      margin-bottom:10px;
-    }
-
-    .credit-card a {
-      display:block;
-      text-align:center;
-      padding:14px;
-      background:#198754;
-      color:#fff;
-      font-weight:600;
-      font-size:16px;
-      border-radius:6px;
-      text-decoration:none;
-      animation:pulse 2.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform:scale(1); }
-      50% { transform:scale(1.03); }
-      100% { transform:scale(1); }
-    }
-
     footer {
       text-align:center;
       margin:40px 0;
@@ -134,9 +105,35 @@
   <button onclick="searchPincode()">Search</button>
   <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
-  <p style="font-size:14px;color:#555;margin-top:15px;">
-    Get accurate Indian pincode details including post office name, district, and state using official India Post data.
-  </p>
+  <!-- 🔥 CREDIT SCORE (GUARANTEED VISIBLE) -->
+  <div style="
+    background:#198754;
+    color:#fff;
+    padding:20px;
+    border-radius:10px;
+    margin-top:20px;
+    text-align:center;
+  ">
+    <h2 style="margin:0 0 10px 0;">💳 Check Your Free Credit Score</h2>
+    <p style="margin:0 0 15px 0;font-size:14px;">
+      Check your CIBIL score instantly. 100% free & secure.
+    </p>
+    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
+       target="_blank"
+       rel="nofollow sponsored"
+       style="
+         display:inline-block;
+         background:#fff;
+         color:#198754;
+         padding:14px 22px;
+         font-size:16px;
+         font-weight:bold;
+         border-radius:6px;
+         text-decoration:none;
+       ">
+      👉 Check Free Credit Score
+    </a>
+  </div>
 
   <!-- Top Ad -->
   <div class="adsense">
@@ -146,18 +143,6 @@
       data-ad-slot="1234567890"
       data-ad-format="auto"
       data-full-width-responsive="true"></ins>
-  </div>
-
-  <!-- Credit Score Section -->
-  <div class="credit-card">
-    <h2>💳 Check Your Free Credit Score</h2>
-    <p style="font-size:14px;color:#333;">
-      Check your CIBIL score instantly for free via Paisabazaar.
-    </p>
-    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-       target="_blank" rel="nofollow sponsored">
-      💳 Check Free Credit Score
-    </a>
   </div>
 
   <div id="result" class="result"></div>
@@ -224,7 +209,7 @@
 
       loadInContentAd();
 
-    } catch (e) {
+    } catch {
       result.style.display = "none";
       error.textContent = "Unable to fetch data. Please try again.";
     }
