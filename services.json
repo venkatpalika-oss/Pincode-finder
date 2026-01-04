@@ -1,0 +1,10 @@
+{
+  "560001": [
+    { "name": "Home Delivery", "available": true, "eta": "2 Days", "price": "Free" },
+    { "name": "Cash on Delivery", "available": false },
+    { "name": "Installation", "available": true, "price": "₹299" }
+  ],
+  "110001": [
+    { "name": "Home Delivery", "available": true, "eta": "1 Day", "price": "Free" }
+  ]
+}
