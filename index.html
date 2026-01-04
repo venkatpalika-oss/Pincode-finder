@@ -3,14 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Indian Pincode & Place Finder</title>
-  <meta name="description" content="Search Indian pincodes or place names using official India Post data. Fast, accurate, and cached for better performance." />
+  <meta name="description" content="Search Indian pincodes or place names using official India Post data. Fast, accurate, and free." />
 
-  <!-- AdSense performance -->
-  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
-  <link rel="preconnect" href="https://googleads.g.doubleclick.net">
-
-  <!-- Google AdSense -->
+  <!-- AdSense -->
   <script async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
     crossorigin="anonymous"></script>
@@ -21,6 +18,7 @@
       background: #f4f6f8;
       margin: 0;
     }
+
     main.container {
       max-width: 720px;
       margin: 60px auto;
@@ -29,6 +27,7 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
+
     h1 { text-align:center; color:#333; }
     h2.subtitle { text-align:center; color:#666; font-size:14px; }
 
@@ -38,7 +37,9 @@
       font-size:16px;
       border-radius:6px;
     }
+
     input { border:1px solid #ccc; }
+
     button {
       margin-top:12px;
       background:#007bff;
@@ -46,10 +47,11 @@
       border:none;
       cursor:pointer;
     }
-    button:hover { background:#0056b3; }
-    .clear-cache { background:#28a745; }
 
-    .adsense { margin:20px 0; text-align:center; min-height:90px; }
+    button:hover { background:#0056b3; }
+
+    .clear-cache { background:#28a745; }
+    .clear-cache:hover { background:#1e7e34; }
 
     .result {
       display:none;
@@ -68,13 +70,49 @@
     .map-container {
       height:250px;
       margin-top:10px;
-      border-radius:6px;
-      overflow:hidden;
     }
+
     .map-container iframe {
       width:100%;
       height:100%;
       border:0;
+    }
+
+    .adsense {
+      margin:20px 0;
+      text-align:center;
+      min-height:90px;
+    }
+
+    .credit-card {
+      background:#e6f4ea;
+      padding:20px;
+      border-radius:8px;
+      margin-top:25px;
+    }
+
+    .credit-card h2 {
+      color:#198754;
+      margin-bottom:10px;
+    }
+
+    .credit-card a {
+      display:block;
+      text-align:center;
+      padding:14px;
+      background:#198754;
+      color:#fff;
+      font-weight:600;
+      font-size:16px;
+      border-radius:6px;
+      text-decoration:none;
+      animation:pulse 2.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform:scale(1); }
+      50% { transform:scale(1.03); }
+      100% { transform:scale(1); }
     }
 
     footer {
@@ -92,32 +130,40 @@
   <h1>Indian Pincode & Place Finder</h1>
   <h2 class="subtitle">Search by Pincode or Place Name</h2>
 
-  <input id="searchInput"
-         aria-label="Search pincode or place"
-         placeholder="Enter 6-digit Pincode or Place Name" />
-
-  <button onclick="handleSearch()">Search</button>
+  <input id="searchInput" placeholder="Enter 6-digit Pincode or Place Name">
+  <button onclick="searchPincode()">Search</button>
   <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
   <p style="font-size:14px;color:#555;margin-top:15px;">
-    Find accurate Indian pincode details including post office name, district,
-    state, and branch type using official India Post data.
+    Get accurate Indian pincode details including post office name, district, and state using official India Post data.
   </p>
 
-  <!-- Above-the-fold ad -->
+  <!-- Top Ad -->
   <div class="adsense">
     <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-9595967643816732"
-         data-ad-slot="1234567890"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
+      style="display:block"
+      data-ad-client="ca-pub-9595967643816732"
+      data-ad-slot="1234567890"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+  </div>
+
+  <!-- Credit Score Section -->
+  <div class="credit-card">
+    <h2>💳 Check Your Free Credit Score</h2>
+    <p style="font-size:14px;color:#333;">
+      Check your CIBIL score instantly for free via Paisabazaar.
+    </p>
+    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
+       target="_blank" rel="nofollow sponsored">
+      💳 Check Free Credit Score
+    </a>
   </div>
 
   <div id="result" class="result"></div>
 
-  <!-- In-content ad -->
-  <div id="adsenseContainer" class="adsense"></div>
+  <!-- In-content Ad -->
+  <div id="adsense-container" class="adsense"></div>
 
   <div id="error" class="error"></div>
 </main>
@@ -126,84 +172,80 @@
   © 2026 Pincode Finder
   <div class="adsense">
     <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-9595967643816732"
-         data-ad-slot="9876543210"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
+      style="display:block"
+      data-ad-client="ca-pub-9595967643816732"
+      data-ad-slot="9876543210"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
   </div>
 </footer>
 
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({});
 
-  async function handleSearch() {
+  async function searchPincode() {
     const input = document.getElementById("searchInput");
-    const resultBox = document.getElementById("result");
-    const errorBox = document.getElementById("error");
-    const adsBox = document.getElementById("adsenseContainer");
+    const result = document.getElementById("result");
+    const error = document.getElementById("error");
 
-    const query = input.value.trim();
-    if (!query) {
-      errorBox.textContent = "Please enter a pincode or place name.";
-      return;
-    }
+    const q = input.value.trim();
+    if (!q) return;
 
-    errorBox.textContent = "";
-    resultBox.style.display = "block";
-    resultBox.innerHTML = "Loading...";
+    result.style.display = "block";
+    result.innerHTML = "Loading...";
+    error.textContent = "";
 
     try {
-      const isPincode = /^\d{6}$/.test(query);
-      const apiUrl = isPincode
-        ? `https://api.postalpincode.in/pincode/${query}`
-        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(query)}`;
+      const isPin = /^\d{6}$/.test(q);
+      const url = isPin
+        ? `https://api.postalpincode.in/pincode/${q}`
+        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
 
-      const response = await fetch(apiUrl);
+      const response = await fetch(url);
       const data = await response.json();
 
-      if (data[0].Status !== "Success" || !data[0].PostOffice) {
-        resultBox.style.display = "none";
-        errorBox.textContent = "No results found.";
+      if (!data[0] || data[0].Status !== "Success") {
+        result.style.display = "none";
+        error.textContent = "No results found.";
         return;
       }
 
-      resultBox.innerHTML = data[0].PostOffice.map(o => `
+      result.innerHTML = data[0].PostOffice.map(o => `
         <div style="margin-bottom:20px;">
           <strong>${o.Name}</strong><br>
-          ${o.District}, ${o.State} – ${o.Pincode}
+          ${o.District}, ${o.State}
           <div class="map-container">
             <iframe loading="lazy"
-              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District + ',' + o.State)}&output=embed">
+              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District)}&output=embed">
             </iframe>
           </div>
         </div>
       `).join("");
 
-      adsBox.innerHTML = `
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-9595967643816732"
-             data-ad-slot="1234567890"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>`;
-      (adsbygoogle = window.adsbygoogle || []).push({});
+      loadInContentAd();
 
-    } catch (err) {
-      console.error(err);
-      resultBox.style.display = "none";
-      errorBox.textContent = "Unable to fetch data. Please try again later.";
+    } catch (e) {
+      result.style.display = "none";
+      error.textContent = "Unable to fetch data. Please try again.";
     }
+  }
+
+  function loadInContentAd() {
+    const adBox = document.getElementById("adsense-container");
+    adBox.innerHTML = `
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-9595967643816732"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>`;
+    (adsbygoogle = window.adsbygoogle || []).push({});
   }
 
   function clearCache() {
     localStorage.clear();
     alert("Cache cleared");
   }
-
-  document.getElementById("searchInput").addEventListener("keypress", e => {
-    if (e.key === "Enter") handleSearch();
-  });
 </script>
 
 </body>
