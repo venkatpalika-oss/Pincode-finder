@@ -31,6 +31,7 @@
     }
     h1 { text-align:center; color:#333; }
     h2.subtitle { text-align:center; color:#666; font-size:14px; }
+
     input, button {
       width:100%;
       padding:14px;
@@ -47,34 +48,63 @@
     }
     button:hover { background:#0056b3; }
     .clear-cache { background:#28a745; }
+
     .adsense { margin:20px 0; text-align:center; min-height:90px; }
-    .result { display:none; margin-top:20px; background:#f1f5ff; padding:20px; border-radius:8px; }
-    .error { color:red; text-align:center; margin-top:15px; }
 
-    .map-container { height:250px; margin-top:10px; }
-    .map-container iframe { width:100%; height:100%; border:0; }
+    .result {
+      display:none;
+      margin-top:20px;
+      background:#f1f5ff;
+      padding:20px;
+      border-radius:8px;
+    }
 
-    footer { text-align:center; margin:40px 0; color:#777; font-size:14px; }
+    .error {
+      color:red;
+      text-align:center;
+      margin-top:15px;
+    }
+
+    .map-container {
+      height:250px;
+      margin-top:10px;
+      border-radius:6px;
+      overflow:hidden;
+    }
+    .map-container iframe {
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    footer {
+      text-align:center;
+      margin:40px 0;
+      color:#777;
+      font-size:14px;
+    }
   </style>
 </head>
 
 <body>
+
 <main class="container">
   <h1>Indian Pincode & Place Finder</h1>
   <h2 class="subtitle">Search by Pincode or Place Name</h2>
 
-  <input id="search" aria-label="Search pincode or place"
-         placeholder="Enter 6-digit Pincode or Place Name">
-  <button onclick="search()">Search</button>
+  <input id="searchInput"
+         aria-label="Search pincode or place"
+         placeholder="Enter 6-digit Pincode or Place Name" />
+
+  <button onclick="handleSearch()">Search</button>
   <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
-  <!-- SEO + AdSense trust content -->
   <p style="font-size:14px;color:#555;margin-top:15px;">
     Find accurate Indian pincode details including post office name, district,
     state, and branch type using official India Post data.
   </p>
 
-  <!-- High CTR ad (above the fold) -->
+  <!-- Above-the-fold ad -->
   <div class="adsense">
     <ins class="adsbygoogle"
          style="display:block"
@@ -87,7 +117,7 @@
   <div id="result" class="result"></div>
 
   <!-- In-content ad -->
-  <div id="adsense-container" class="adsense"></div>
+  <div id="adsenseContainer" class="adsense"></div>
 
   <div id="error" class="error"></div>
 </main>
@@ -107,62 +137,74 @@
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({});
 
-  async function search() {
-    const q = search.value.trim();
-    if (!q) return;
+  async function handleSearch() {
+    const input = document.getElementById("searchInput");
+    const resultBox = document.getElementById("result");
+    const errorBox = document.getElementById("error");
+    const adsBox = document.getElementById("adsenseContainer");
 
-    result.style.display = "block";
-    result.innerHTML = "Loading...";
-    error.textContent = "";
+    const query = input.value.trim();
+    if (!query) {
+      errorBox.textContent = "Please enter a pincode or place name.";
+      return;
+    }
+
+    errorBox.textContent = "";
+    resultBox.style.display = "block";
+    resultBox.innerHTML = "Loading...";
 
     try {
-      const isPin = /^\d{6}$/.test(q);
-      const url = isPin
-        ? `https://api.postalpincode.in/pincode/${q}`
-        : `https://api.postalpincode.in/postoffice/${q}`;
+      const isPincode = /^\d{6}$/.test(query);
+      const apiUrl = isPincode
+        ? `https://api.postalpincode.in/pincode/${query}`
+        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(query)}`;
 
-      const r = await fetch(url);
-      const d = await r.json();
+      const response = await fetch(apiUrl);
+      const data = await response.json();
 
-      if (d[0].Status !== "Success") {
-        result.style.display = "none";
-        error.textContent = "No results found.";
+      if (data[0].Status !== "Success" || !data[0].PostOffice) {
+        resultBox.style.display = "none";
+        errorBox.textContent = "No results found.";
         return;
       }
 
-      result.innerHTML = d[0].PostOffice.map(o => `
+      resultBox.innerHTML = data[0].PostOffice.map(o => `
         <div style="margin-bottom:20px;">
-          <b>${o.Name}</b><br>${o.District}, ${o.State}
+          <strong>${o.Name}</strong><br>
+          ${o.District}, ${o.State} – ${o.Pincode}
           <div class="map-container">
             <iframe loading="lazy"
-              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District)}&output=embed">
+              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District + ',' + o.State)}&output=embed">
             </iframe>
           </div>
         </div>
       `).join("");
 
-      loadAd();
-    } catch {
-      result.style.display = "none";
-      error.textContent = "Unable to fetch data.";
-    }
-  }
+      adsBox.innerHTML = `
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9595967643816732"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>`;
+      (adsbygoogle = window.adsbygoogle || []).push({});
 
-  function loadAd() {
-    adsense-container.innerHTML = `
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-9595967643816732"
-           data-ad-slot="1234567890"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>`;
-    (adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error(err);
+      resultBox.style.display = "none";
+      errorBox.textContent = "Unable to fetch data. Please try again later.";
+    }
   }
 
   function clearCache() {
     localStorage.clear();
     alert("Cache cleared");
   }
+
+  document.getElementById("searchInput").addEventListener("keypress", e => {
+    if (e.key === "Enter") handleSearch();
+  });
 </script>
+
 </body>
 </html>
