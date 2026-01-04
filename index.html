@@ -4,9 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Indian Pincode & Place Finder</title>
-  <meta name="description" content="Search Indian pincodes or place names using official public postal data. Fast, accurate, and cached for better performance." />
+  <meta name="description" content="Search Indian pincodes or place names using official India Post data. Fast, accurate, and cached for better performance." />
 
-  <!-- Google AdSense (LOAD ONCE) -->
+  <!-- AdSense performance -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net">
+
+  <!-- Google AdSense -->
   <script async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
     crossorigin="anonymous"></script>
@@ -16,7 +20,6 @@
       font-family: Arial, Helvetica, sans-serif;
       background: #f4f6f8;
       margin: 0;
-      padding: 0;
     }
     main.container {
       max-width: 720px;
@@ -26,59 +29,32 @@
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    h1 { text-align: center; margin-bottom: 10px; color: #333; }
-    h2.subtitle { text-align: center; color: #666; margin-bottom: 25px; font-size: 14px; }
-    input { width: 100%; padding: 14px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px; }
-    button { width: 100%; margin-top: 15px; padding: 14px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
-    button:hover { background: #0056b3; }
-    .result { margin-top: 25px; padding: 20px; background: #f1f5ff; border-radius: 8px; display: none; }
-    .error { margin-top: 20px; color: red; text-align: center; }
-    footer { text-align: center; margin-top: 40px; color: #777; font-size: 14px; }
-    .clear-cache { margin-top: 10px; background: #28a745; }
-    .clear-cache:hover { background: #1e7e34; }
-
-    .map-container {
-      margin-top:10px;
-      border-radius:6px;
-      overflow:hidden;
-      height:250px;
-    }
-    .map-container iframe {
+    h1 { text-align:center; color:#333; }
+    h2.subtitle { text-align:center; color:#666; font-size:14px; }
+    input, button {
       width:100%;
-      height:100%;
-      border:0;
+      padding:14px;
+      font-size:16px;
+      border-radius:6px;
     }
+    input { border:1px solid #ccc; }
+    button {
+      margin-top:12px;
+      background:#007bff;
+      color:#fff;
+      border:none;
+      cursor:pointer;
+    }
+    button:hover { background:#0056b3; }
+    .clear-cache { background:#28a745; }
+    .adsense { margin:20px 0; text-align:center; min-height:90px; }
+    .result { display:none; margin-top:20px; background:#f1f5ff; padding:20px; border-radius:8px; }
+    .error { color:red; text-align:center; margin-top:15px; }
 
-    .adsense { margin:20px 0; text-align:center; }
+    .map-container { height:250px; margin-top:10px; }
+    .map-container iframe { width:100%; height:100%; border:0; }
 
-    .credit-card {
-      background: #e6f4ea;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 25px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    .credit-card h2 { color: #198754; margin-bottom:10px; }
-    .credit-card a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 14px;
-      background: #198754;
-      color: #fff;
-      font-weight: 600;
-      font-size: 16px;
-      border-radius: 6px;
-      text-decoration: none;
-      margin-top:10px;
-      animation: pulse 2.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
-    }
+    footer { text-align:center; margin:40px 0; color:#777; font-size:14px; }
   </style>
 </head>
 
@@ -87,20 +63,30 @@
   <h1>Indian Pincode & Place Finder</h1>
   <h2 class="subtitle">Search by Pincode or Place Name</h2>
 
-  <input id="search" placeholder="Enter 6-digit Pincode or Place Name">
+  <input id="search" aria-label="Search pincode or place"
+         placeholder="Enter 6-digit Pincode or Place Name">
   <button onclick="search()">Search</button>
   <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
-  <div class="credit-card">
-    <h2>💳 Check Your Free Credit Score</h2>
-    <a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
-      💳 Check Free Credit Score
-    </a>
+  <!-- SEO + AdSense trust content -->
+  <p style="font-size:14px;color:#555;margin-top:15px;">
+    Find accurate Indian pincode details including post office name, district,
+    state, and branch type using official India Post data.
+  </p>
+
+  <!-- High CTR ad (above the fold) -->
+  <div class="adsense">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-9595967643816732"
+         data-ad-slot="1234567890"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
   </div>
 
   <div id="result" class="result"></div>
 
-  <!-- In-content Ad -->
+  <!-- In-content ad -->
   <div id="adsense-container" class="adsense"></div>
 
   <div id="error" class="error"></div>
@@ -119,50 +105,57 @@
 </footer>
 
 <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+
   async function search() {
     const q = search.value.trim();
     if (!q) return;
 
+    result.style.display = "block";
     result.innerHTML = "Loading...";
     error.textContent = "";
 
-    const isPin = /^\d{6}$/.test(q);
-    const url = isPin
-      ? `https://api.postalpincode.in/pincode/${q}`
-      : `https://api.postalpincode.in/postoffice/${q}`;
+    try {
+      const isPin = /^\d{6}$/.test(q);
+      const url = isPin
+        ? `https://api.postalpincode.in/pincode/${q}`
+        : `https://api.postalpincode.in/postoffice/${q}`;
 
-    const r = await fetch(url);
-    const d = await r.json();
+      const r = await fetch(url);
+      const d = await r.json();
 
-    if (d[0].Status !== "Success") {
-      result.style.display = "none";
-      error.textContent = "No results found";
-      return;
-    }
+      if (d[0].Status !== "Success") {
+        result.style.display = "none";
+        error.textContent = "No results found.";
+        return;
+      }
 
-    result.innerHTML = d[0].PostOffice.map(o => `
-      <div>
-        <b>${o.Name}</b><br>${o.District}, ${o.State}
-        <div class="map-container">
-          <iframe loading="lazy"
-            src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District)}&output=embed">
-          </iframe>
+      result.innerHTML = d[0].PostOffice.map(o => `
+        <div style="margin-bottom:20px;">
+          <b>${o.Name}</b><br>${o.District}, ${o.State}
+          <div class="map-container">
+            <iframe loading="lazy"
+              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District)}&output=embed">
+            </iframe>
+          </div>
         </div>
-      </div>
-    `).join("");
+      `).join("");
 
-    result.style.display = "block";
-    loadAd();
+      loadAd();
+    } catch {
+      result.style.display = "none";
+      error.textContent = "Unable to fetch data.";
+    }
   }
 
   function loadAd() {
     adsense-container.innerHTML = `
       <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-9595967643816732"
-        data-ad-slot="1234567890"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>`;
+           style="display:block"
+           data-ad-client="ca-pub-9595967643816732"
+           data-ad-slot="1234567890"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>`;
     (adsbygoogle = window.adsbygoogle || []).push({});
   }
 
@@ -170,9 +163,6 @@
     localStorage.clear();
     alert("Cache cleared");
   }
-
-  // Initialize footer ad
-  (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 </body>
 </html>
