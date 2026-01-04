@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Indian Pincode & Place Finder</title>
   <meta name="description" content="Search Indian pincodes or place names using official public postal data. Fast, accurate, and cached for better performance." />
-  
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
-     crossorigin="anonymous"></script>
+
+  <!-- Google AdSense (LOAD ONCE) -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
+    crossorigin="anonymous"></script>
 
   <style>
     body {
@@ -35,10 +36,21 @@
     footer { text-align: center; margin-top: 40px; color: #777; font-size: 14px; }
     .clear-cache { margin-top: 10px; background: #28a745; }
     .clear-cache:hover { background: #1e7e34; }
-    .map-container { margin-top:10px; border-radius:6px; overflow:hidden; height:250px; }
+
+    .map-container {
+      margin-top:10px;
+      border-radius:6px;
+      overflow:hidden;
+      height:250px;
+    }
+    .map-container iframe {
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
     .adsense { margin:20px 0; text-align:center; }
 
-    /* Credit Score Card */
     .credit-card {
       background: #e6f4ea;
       padding: 20px;
@@ -47,7 +59,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
     .credit-card h2 { color: #198754; margin-bottom:10px; }
-    .credit-card p { margin:5px 0; }
     .credit-card a {
       display: flex;
       justify-content: center;
@@ -59,181 +70,109 @@
       font-size: 16px;
       border-radius: 6px;
       text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       margin-top:10px;
       animation: pulse 2.5s infinite;
     }
-    .credit-card a:hover {
-      background: #157347;
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    }
-    .credit-card ul {
-      margin-top:10px;
-      padding-left:18px;
-      font-size:14px;
-      color:#444;
-    }
 
-    /* Pulse Keyframes for Credit Button */
     @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-      50% { transform: scale(1.03); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-      100% { transform: scale(1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
+
 <body>
+<main class="container">
+  <h1>Indian Pincode & Place Finder</h1>
+  <h2 class="subtitle">Search by Pincode or Place Name</h2>
 
-  <main class="container">
-    <h1>Indian Pincode & Place Finder</h1>
-    <h2 class="subtitle">Search by Pincode or Place Name (Hybrid with caching)</h2>
+  <input id="search" placeholder="Enter 6-digit Pincode or Place Name">
+  <button onclick="search()">Search</button>
+  <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
 
-    <input type="text" id="search" placeholder="Enter 6-digit Pincode or Place Name" aria-label="Enter pincode or place"/>
-    <button onclick="search()">Search</button>
-    <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
+  <div class="credit-card">
+    <h2>💳 Check Your Free Credit Score</h2>
+    <a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
+      💳 Check Free Credit Score
+    </a>
+  </div>
 
-    <!-- Embedded Credit Score Section -->
-    <div class="credit-card">
-      <h2>💳 Check Your Free Credit Score</h2>
-      <p>Know your CIBIL score instantly. Safe, secure, and free via Paisabazaar.</p>
-      <a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
-        💳 Check Free Credit Score
-      </a>
-      <ul>
-        <li>✔ No impact on your credit score</li>
-        <li>✔ Used by millions in India</li>
-        <li>✔ RBI-regulated credit bureaus</li>
-        <li>✔ We do not store your data</li>
-      </ul>
-    </div>
+  <div id="result" class="result"></div>
 
-    <div class="result" id="result" aria-live="polite"></div>
-    <div class="adsense" id="adsense-container"></div>
-    <div class="error" id="error" aria-live="assertive"></div>
-  </main>
+  <!-- In-content Ad -->
+  <div id="adsense-container" class="adsense"></div>
 
-  <footer>
-    © 2026 Pincode Finder | Legal & Cached Data
-    <div class="adsense" id="footer-ad">
-      <ins class="adsbygoogle"
-           style="display:block; text-align:center;"
-           data-ad-client="ca-pub-9595967643816732"
-           data-ad-slot="9876543210"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-    </div>
-  </footer>
+  <div id="error" class="error"></div>
+</main>
 
-  <script>
-    document.getElementById('search').addEventListener('keypress', function(e){
-      if(e.key === 'Enter') search();
-    });
+<footer>
+  © 2026 Pincode Finder
+  <div class="adsense">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-9595967643816732"
+         data-ad-slot="9876543210"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
+</footer>
 
-    async function search() {
-      const query = document.getElementById('search').value.trim();
-      const resultDiv = document.getElementById('result');
-      const errorDiv = document.getElementById('error');
-      const adsDiv = document.getElementById('adsense-container');
+<script>
+  async function search() {
+    const q = search.value.trim();
+    if (!q) return;
 
-      resultDiv.style.display = 'block';
-      resultDiv.innerHTML = 'Fetching data...';
-      errorDiv.textContent = '';
-      adsDiv.innerHTML = '';
+    result.innerHTML = "Loading...";
+    error.textContent = "";
 
-      if (!query) {
-        resultDiv.style.display = 'none';
-        errorDiv.textContent = 'Please enter a pincode or place name.';
-        return;
-      }
+    const isPin = /^\d{6}$/.test(q);
+    const url = isPin
+      ? `https://api.postalpincode.in/pincode/${q}`
+      : `https://api.postalpincode.in/postoffice/${q}`;
 
-      const isPincode = /^\d{6}$/.test(query);
-      const cacheKey = isPincode ? `pincode_${query}` : `place_${query.toLowerCase()}`;
+    const r = await fetch(url);
+    const d = await r.json();
 
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        const offices = JSON.parse(cached);
-        displayResult(offices);
-        loadAd();
-        return;
-      }
-
-      try {
-        const url = isPincode
-          ? `https://api.postalpincode.in/pincode/${query}`
-          : `https://api.postalpincode.in/postoffice/${encodeURIComponent(query)}`;
-
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('API error');
-
-        const apiData = await response.json();
-
-        if (apiData[0].Status !== 'Success' || !apiData[0].PostOffice || apiData[0].PostOffice.length === 0) {
-          resultDiv.style.display = 'none';
-          errorDiv.textContent = 'No results found.';
-          return;
-        }
-
-        const offices = apiData[0].PostOffice;
-        localStorage.setItem(cacheKey, JSON.stringify(offices));
-        displayResult(offices);
-        loadAd();
-
-      } catch (err) {
-        resultDiv.style.display = 'none';
-        errorDiv.textContent = 'Unable to fetch data. Please try again later.';
-      }
+    if (d[0].Status !== "Success") {
+      result.style.display = "none";
+      error.textContent = "No results found";
+      return;
     }
 
-    function displayResult(offices) {
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = offices.map(office => `
-        <div style="margin-bottom:20px;">
-          <strong>Pincode:</strong> ${office.Pincode}<br>
-          <strong>Post Office:</strong> ${office.Name}<br>
-          <strong>District:</strong> ${office.District}<br>
-          <strong>State:</strong> ${office.State}<br>
-          <strong>Branch Type:</strong> ${office.BranchType}<br>
-          <button onclick="showMap('${office.Name}, ${office.District}, ${office.State}', '${office.Pincode}')">
-            Show Map
-          </button>
-          <div id="map-${office.Pincode}" class="map-container"></div>
+    result.innerHTML = d[0].PostOffice.map(o => `
+      <div>
+        <b>${o.Name}</b><br>${o.District}, ${o.State}
+        <div class="map-container">
+          <iframe loading="lazy"
+            src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District)}&output=embed">
+          </iframe>
         </div>
-      `).join('');
-      resultDiv.style.display = 'block';
-    }
+      </div>
+    `).join("");
 
-    function showMap(location, pin) {
-      const mapDiv = document.getElementById(`map-${pin}`);
-      mapDiv.innerHTML = `<iframe
-        loading="lazy"
-        allowfullscreen
-        src="https://www.google.com/maps?q=${encodeURIComponent(location)}&output=embed">
-      </iframe>`;
-      mapDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    result.style.display = "block";
+    loadAd();
+  }
 
-    function clearCache() {
-      localStorage.clear();
-      alert('Cache cleared!');
-    }
-
-    function loadAd() {
-      const adsDiv = document.getElementById('adsense-container');
-      adsDiv.innerHTML = `
-        <ins class="adsbygoogle"
-             style="display:block; text-align:center;"
-             data-ad-client="ca-pub-9595967643816732"
-             data-ad-slot="1234567890"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-      `;
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    }
-
+  function loadAd() {
+    adsense-container.innerHTML = `
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-9595967643816732"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>`;
     (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
+  }
 
+  function clearCache() {
+    localStorage.clear();
+    alert("Cache cleared");
+  }
+
+  // Initialize footer ad
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 </body>
 </html>
