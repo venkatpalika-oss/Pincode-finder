@@ -4,40 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Global Postal Code Finder | India Pincode, US ZIP, UK Postcode</title>
-<meta name="description" content="Search India pincodes, US ZIP codes, UK postcodes, and international postal codes instantly.">
+<title>Global Postal Code Finder | India Pincode & International ZIP Codes</title>
+<meta name="description" content="Search Indian pincodes and international postal codes by country. Fast, accurate, and free.">
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732" crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/jsadsbygoogle.js?client=ca-pub-9595967643816732" crossorigin="anonymous"></script>
 
 <style>
 body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0}
 .container{max-width:900px;margin:50px auto;background:#fff;padding:30px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
 h1{text-align:center}
 .subtitle{text-align:center;color:#666;font-size:14px}
-input,button{width:100%;padding:14px;font-size:16px;border-radius:6px}
-input{border:1px solid #ccc}
-button{margin-top:12px;background:#007bff;color:#fff;border:none;cursor:pointer}
+
+input,select,button{
+width:100%;
+padding:14px;
+font-size:16px;
+border-radius:6px;
+margin-top:10px;
+}
+
+input,select{border:1px solid #ccc}
+
+button{background:#007bff;color:#fff;border:none;cursor:pointer}
 button:hover{background:#0056b3}
 
+.section{margin-top:25px}
 .card{
 background:#f1f5ff;
 padding:15px;
 border-radius:8px;
 margin-bottom:12px;
-cursor:pointer;
-transition:.2s;
+cursor:pointer
 }
-.card:hover{background:#e6edff}
-
-.card a{
-text-decoration:none;
-color:inherit;
-display:block;
-}
-
+.card a{text-decoration:none;color:inherit;display:block}
 .error{text-align:center;color:red;margin-top:15px}
 
-/* Credit score desktop */
+/* Credit Score */
 .credit-side{
 position:fixed;right:20px;top:120px;width:260px;
 background:#e6f4ea;padding:15px;border-radius:10px;
@@ -73,10 +75,31 @@ font-weight:600;text-decoration:none
 
 <div class="container">
 <h1>🌍 Global Postal Code Finder</h1>
-<p class="subtitle">India Pincode • US ZIP • UK Postcode • International</p>
+<p class="subtitle">India Pincode & International ZIP / Postal Codes</p>
 
-<input id="q" placeholder="Enter city, pincode, zip or postcode">
-<button onclick="search()">Search</button>
+<!-- INDIA SEARCH -->
+<div class="section">
+<h3>🇮🇳 India Search</h3>
+<input id="indiaInput" placeholder="Enter city or 6-digit pincode">
+<button onclick="searchIndia()">Search India</button>
+</div>
+
+<!-- INTERNATIONAL SEARCH -->
+<div class="section">
+<h3>🌍 International Search</h3>
+<select id="country">
+<option value="">Select Country</option>
+<option value="US">United States</option>
+<option value="GB">United Kingdom</option>
+<option value="CA">Canada</option>
+<option value="AU">Australia</option>
+<option value="DE">Germany</option>
+<option value="FR">France</option>
+</select>
+
+<input id="intlInput" placeholder="Enter postal / zip code">
+<button onclick="searchIntl()">Search International</button>
+</div>
 
 <div id="result"></div>
 <div id="error" class="error"></div>
@@ -96,26 +119,14 @@ Check Now
 </a>
 
 <script>
-function detectCountry(q){
-if(/^\d{6}$/.test(q)) return "IN";
-if(/^\d{5}$/.test(q)) return "US";
-if(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i.test(q)) return "GB";
-return "IN";
-}
-
-async function search(){
-const q=document.getElementById("q").value.trim();
+async function searchIndia(){
+const q=document.getElementById("indiaInput").value.trim();
 const result=document.getElementById("result");
 const error=document.getElementById("error");
-
-result.innerHTML="";
-error.textContent="";
+result.innerHTML=""; error.textContent="";
 if(!q) return;
 
 try{
-const country=detectCountry(q);
-
-if(country==="IN"){
 const url=/^\d{6}$/.test(q)
 ?`https://api.postalpincode.in/pincode/${q}`
 :`https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
@@ -123,20 +134,7 @@ const url=/^\d{6}$/.test(q)
 const data=await (await fetch(url)).json();
 if(data[0].Status!=="Success") throw "";
 
-renderIndia(data[0].PostOffice);
-}else{
-const data=await (await fetch(`https://api.zippopotam.us/${country}/${q}`)).json();
-renderIntl(data);
-}
-}catch{
-error.textContent="No results found.";
-}
-}
-
-function renderIndia(list){
-const result=document.getElementById("result");
-
-result.innerHTML=list.map(o=>`
+result.innerHTML=data[0].PostOffice.map(o=>`
 <div class="card">
 <a href="detail.html?country=IN&pin=${o.Pincode}&name=${encodeURIComponent(o.Name)}&district=${encodeURIComponent(o.District)}&state=${encodeURIComponent(o.State)}">
 <strong>${o.Name} – ${o.Pincode}</strong><br>
@@ -144,20 +142,33 @@ ${o.District}, ${o.State}
 </a>
 </div>
 `).join("");
+}catch{
+error.textContent="No results found.";
+}
 }
 
-function renderIntl(d){
+async function searchIntl(){
+const c=document.getElementById("country").value;
+const q=document.getElementById("intlInput").value.trim();
 const result=document.getElementById("result");
-const p=d.places[0];
+const error=document.getElementById("error");
+result.innerHTML=""; error.textContent="";
+if(!c||!q) return;
+
+try{
+const data=await (await fetch(`https://api.zippopotam.us/${c}/${q}`)).json();
+const p=data.places[0];
 
 result.innerHTML=`
 <div class="card">
-<a href="detail.html?country=${d.country}&pin=${d['post code']}&place=${encodeURIComponent(p['place name'])}&state=${encodeURIComponent(p.state)}">
-<strong>${d['post code']}</strong><br>
+<a href="detail.html?country=${c}&pin=${data['post code']}&place=${encodeURIComponent(p['place name'])}&state=${encodeURIComponent(p.state)}">
+<strong>${data['post code']}</strong><br>
 ${p['place name']}, ${p.state}
 </a>
-</div>
-`;
+</div>`;
+}catch{
+error.textContent="No results found.";
+}
 }
 </script>
 
