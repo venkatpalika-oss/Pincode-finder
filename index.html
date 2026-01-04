@@ -7,10 +7,6 @@
 <title>Global Postal Code Finder | India PIN, ZIP & Postcode</title>
 <meta name="description" content="Find Indian PIN codes and international ZIP / postal codes by city or code. Free global postal lookup with maps.">
 
-<!-- Google AdSense -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
-crossorigin="anonymous"></script>
-
 <style>
 body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0}
 .container{max-width:900px;margin:40px auto;background:#fff;padding:25px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
@@ -25,11 +21,10 @@ button{background:#007bff;color:#fff;border:none;cursor:pointer}
 button:hover{background:#0056b3}
 
 .card{
-  padding:14px;border-bottom:1px solid #ddd;cursor:pointer
+  padding:14px;border-bottom:1px solid #ddd
 }
-.card:hover{background:#f1f5ff}
 
-.map{height:240px;margin-top:10px}
+.map{height:220px;margin-top:10px}
 .map iframe{width:100%;height:100%;border:0}
 
 .error{text-align:center;color:red;margin-top:15px}
@@ -40,7 +35,7 @@ button:hover{background:#0056b3}
 
 <div class="container">
 <h1>🌍 Global Postal Code Finder</h1>
-<p class="subtitle">India PIN • US ZIP • UK • Canada • Australia • Europe</p>
+<p class="subtitle">🇮🇳 India PIN • 🌍 International ZIP & Postcode</p>
 
 <select id="country">
   <option value="IN">🇮🇳 India</option>
@@ -61,7 +56,6 @@ button:hover{background:#0056b3}
 </div>
 
 <script>
-/* 🔐 OpenCage key – restrict this to your domain */
 const OPENCAGE_KEY = "c5d8ded23d19451a95b3d326d9a28d03";
 
 async function search(){
@@ -70,62 +64,63 @@ async function search(){
   const result = document.getElementById("result");
   const error = document.getElementById("error");
 
-  result.innerHTML = "";
-  error.textContent = "";
+  result.innerHTML="";
+  error.textContent="";
   if(!q) return;
 
   try{
-    /* 🇮🇳 INDIA LOGIC */
-    if(country === "IN"){
+    /* 🇮🇳 INDIA */
+    if(country==="IN"){
       const url = /^\d{6}$/.test(q)
         ? `https://api.postalpincode.in/pincode/${q}`
         : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
 
       const d = await (await fetch(url)).json();
-      if(d[0].Status !== "Success") throw "";
+      if(d[0].Status!=="Success") throw "";
 
       d[0].PostOffice.forEach(o=>{
-        result.innerHTML += `
-          <div class="card">
-            🇮🇳 <strong>${o.Name} – ${o.Pincode}</strong><br>
-            ${o.District}, ${o.State}
-            <div class="map">
-              <iframe loading="lazy"
-                src="https://www.google.com/maps?q=${encodeURIComponent(o.Name+','+o.District)}&output=embed">
-              </iframe>
-            </div>
-          </div>`;
+        result.innerHTML+=`
+        <div class="card">
+          🇮🇳 <strong>${o.Name} – ${o.Pincode}</strong><br>
+          ${o.District}, ${o.State}
+          <div class="map">
+            <iframe loading="lazy"
+              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name+','+o.District+','+o.State)}&output=embed">
+            </iframe>
+          </div>
+        </div>`;
       });
       return;
     }
 
-    /* 🌍 INTERNATIONAL (CITY → POSTAL via OpenCage) */
-    const geoURL = `https://api.opencagedata.com/geocode/v1/json
-      ?q=${encodeURIComponent(q)}
-      &countrycode=${country.toLowerCase()}
-      &key=${OPENCAGE_KEY}
-      &limit=3`;
+    /* 🌍 INTERNATIONAL (CITY → LOCATION → POSTCODE IF AVAILABLE) */
+    const geoURL =
+      "https://api.opencagedata.com/geocode/v1/json" +
+      "?q=" + encodeURIComponent(q) +
+      "&countrycode=" + country.toLowerCase() +
+      "&limit=3" +
+      "&key=" + OPENCAGE_KEY;
 
     const geo = await (await fetch(geoURL)).json();
     if(!geo.results.length) throw "";
 
     geo.results.forEach(r=>{
       const c = r.components;
-      result.innerHTML += `
-        <div class="card">
-          🌍 <strong>${c.postcode || "Postal code not available"}</strong><br>
-          ${c.city || c.town || c.village || q},
-          ${c.state || ""} ${c.country || ""}
-          <div class="map">
-            <iframe loading="lazy"
-              src="https://www.google.com/maps?q=${r.geometry.lat},${r.geometry.lng}&output=embed">
-            </iframe>
-          </div>
-        </div>`;
+      result.innerHTML+=`
+      <div class="card">
+        🌍 <strong>${c.postcode || "Postal code not available"}</strong><br>
+        ${c.city || c.town || c.village || q},
+        ${c.state || ""}, ${c.country || ""}
+        <div class="map">
+          <iframe loading="lazy"
+            src="https://www.google.com/maps?q=${r.geometry.lat},${r.geometry.lng}&output=embed">
+          </iframe>
+        </div>
+      </div>`;
     });
 
   }catch{
-    error.textContent = "No results found.";
+    error.textContent="No results found.";
   }
 }
 </script>
