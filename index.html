@@ -7,9 +7,16 @@
 <title>Global Postal Code Finder | India PIN, ZIP & Postcode</title>
 <meta name="description" content="Find Indian PIN codes and international ZIP / postal codes by city or code. Free global postal lookup with maps.">
 
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
+crossorigin="anonymous"></script>
+
 <style>
 body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0}
-.container{max-width:900px;margin:40px auto;background:#fff;padding:25px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.wrapper{display:flex;max-width:1200px;margin:40px auto;gap:20px;padding:0 15px}
+main{flex:3;background:#fff;padding:25px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+aside{flex:1}
+
 h1{text-align:center}
 .subtitle{text-align:center;color:#666;font-size:14px;margin-bottom:15px}
 
@@ -23,17 +30,75 @@ button:hover{background:#0056b3}
 .card{
   padding:14px;border-bottom:1px solid #ddd
 }
-
 .map{height:220px;margin-top:10px}
 .map iframe{width:100%;height:100%;border:0}
 
 .error{text-align:center;color:red;margin-top:15px}
+
+/* Credit Score */
+.credit-box{
+  background:#e6f4ea;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 8px rgba(0,0,0,.12)
+}
+.credit-box h3{color:#198754;margin-top:0}
+.credit-box a{
+  display:block;
+  background:#198754;
+  color:#fff;
+  padding:14px;
+  border-radius:6px;
+  text-align:center;
+  text-decoration:none;
+  font-weight:600;
+  animation:pulse 2.5s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+  100%{transform:scale(1)}
+}
+
+/* Mobile CTA */
+.mobile-cta{
+  display:none;
+}
+@media(max-width:900px){
+  .wrapper{flex-direction:column}
+  aside{display:none}
+
+  .mobile-cta{
+    display:flex;
+    position:fixed;
+    bottom:0;left:0;right:0;
+    background:#198754;
+    color:#fff;
+    padding:14px;
+    justify-content:space-between;
+    align-items:center;
+    font-weight:600;
+    z-index:9999
+  }
+  .mobile-cta a{
+    background:#fff;
+    color:#198754;
+    padding:10px 14px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:700
+  }
+  body{padding-bottom:80px}
+}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="wrapper">
+
+<main>
 <h1>🌍 Global Postal Code Finder</h1>
 <p class="subtitle">🇮🇳 India PIN • 🌍 International ZIP & Postcode</p>
 
@@ -53,29 +118,53 @@ button:hover{background:#0056b3}
 
 <div id="result"></div>
 <div id="error" class="error"></div>
+</main>
+
+<!-- Credit Score Sidebar -->
+<aside>
+  <div class="credit-box">
+    <h3>💳 Free Credit Score</h3>
+    <p style="font-size:14px">
+      Check your CIBIL credit score instantly.  
+      100% free via Paisabazaar.
+    </p>
+    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
+       target="_blank" rel="nofollow sponsored">
+      Check Free Credit Score
+    </a>
+  </div>
+</aside>
+
+</div>
+
+<!-- Mobile CTA -->
+<div class="mobile-cta">
+  <span>💳 Free Credit Score</span>
+  <a href="https://www.paisabazaar.com/?affid=PB005260220213"
+     target="_blank" rel="nofollow sponsored">
+    Check Now
+  </a>
 </div>
 
 <script>
-const OPENCAGE_KEY = "c5d8ded23d19451a95b3d326d9a28d03";
+const OPENCAGE_KEY="c5d8ded23d19451a95b3d326d9a28d03";
 
 async function search(){
-  const q = document.getElementById("q").value.trim();
-  const country = document.getElementById("country").value;
-  const result = document.getElementById("result");
-  const error = document.getElementById("error");
+  const q=document.getElementById("q").value.trim();
+  const country=document.getElementById("country").value;
+  const result=document.getElementById("result");
+  const error=document.getElementById("error");
 
-  result.innerHTML="";
-  error.textContent="";
+  result.innerHTML=""; error.textContent="";
   if(!q) return;
 
   try{
-    /* 🇮🇳 INDIA */
     if(country==="IN"){
-      const url = /^\d{6}$/.test(q)
-        ? `https://api.postalpincode.in/pincode/${q}`
-        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
+      const url=/^\d{6}$/.test(q)
+        ?`https://api.postalpincode.in/pincode/${q}`
+        :`https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
 
-      const d = await (await fetch(url)).json();
+      const d=await (await fetch(url)).json();
       if(d[0].Status!=="Success") throw "";
 
       d[0].PostOffice.forEach(o=>{
@@ -85,7 +174,7 @@ async function search(){
           ${o.District}, ${o.State}
           <div class="map">
             <iframe loading="lazy"
-              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name+','+o.District+','+o.State)}&output=embed">
+            src="https://www.google.com/maps?q=${encodeURIComponent(o.Name+','+o.District+','+o.State)}&output=embed">
             </iframe>
           </div>
         </div>`;
@@ -93,27 +182,21 @@ async function search(){
       return;
     }
 
-    /* 🌍 INTERNATIONAL (CITY → LOCATION → POSTCODE IF AVAILABLE) */
-    const geoURL =
-      "https://api.opencagedata.com/geocode/v1/json" +
-      "?q=" + encodeURIComponent(q) +
-      "&countrycode=" + country.toLowerCase() +
-      "&limit=3" +
-      "&key=" + OPENCAGE_KEY;
+    const geoURL=
+      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(q)}&countrycode=${country.toLowerCase()}&limit=3&key=${OPENCAGE_KEY}`;
 
-    const geo = await (await fetch(geoURL)).json();
+    const geo=await (await fetch(geoURL)).json();
     if(!geo.results.length) throw "";
 
     geo.results.forEach(r=>{
-      const c = r.components;
+      const c=r.components;
       result.innerHTML+=`
       <div class="card">
         🌍 <strong>${c.postcode || "Postal code not available"}</strong><br>
-        ${c.city || c.town || c.village || q},
-        ${c.state || ""}, ${c.country || ""}
+        ${c.city||c.town||c.village||q}, ${c.state||""}, ${c.country||""}
         <div class="map">
           <iframe loading="lazy"
-            src="https://www.google.com/maps?q=${r.geometry.lat},${r.geometry.lng}&output=embed">
+          src="https://www.google.com/maps?q=${r.geometry.lat},${r.geometry.lng}&output=embed">
           </iframe>
         </div>
       </div>`;
