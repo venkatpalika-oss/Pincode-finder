@@ -4,152 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Global Postal Code Finder | India Pincode, US ZIP, UK Postcode</title>
-<meta name="description" content="Search India pincodes, US ZIP codes, UK postcodes, and international postal codes instantly. Accurate, fast, and free postal code lookup.">
+<title>Postal Code Details</title>
 
-<!-- AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732" crossorigin="anonymous"></script>
 
 <style>
-body {font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;margin:0}
-.container{max-width:900px;margin:50px auto;background:#fff;padding:30px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
-h1{text-align:center}
-.subtitle{text-align:center;color:#666;font-size:14px}
-input,button{width:100%;padding:14px;font-size:16px;border-radius:6px}
-input{border:1px solid #ccc}
-button{margin-top:12px;background:#007bff;color:#fff;border:none;cursor:pointer}
-button:hover{background:#0056b3}
-.result{margin-top:20px}
-.card{background:#f1f5ff;padding:15px;border-radius:8px;margin-bottom:12px;cursor:pointer}
-.card strong{font-size:16px}
-.details{display:none;margin-top:10px}
-.map{height:220px;margin-top:10px}
+body{font-family:Arial;background:#f4f6f8;margin:0}
+.box{max-width:800px;margin:40px auto;background:#fff;padding:25px;border-radius:10px}
+.map{height:300px;margin-top:15px}
 .map iframe{width:100%;height:100%;border:0}
-.error{text-align:center;color:red;margin-top:15px}
-
-/* Credit score desktop */
-.credit-side{
-position:fixed;right:20px;top:120px;width:260px;
-background:#e6f4ea;padding:15px;border-radius:10px;
-box-shadow:0 4px 8px rgba(0,0,0,.15)
-}
-.credit-side a{
-display:block;text-align:center;background:#198754;color:#fff;
-padding:14px;border-radius:6px;text-decoration:none;font-weight:600;
-animation:pulse 2.5s infinite
-}
-
-/* Mobile CTA */
-.mobile-cta{
-display:none;position:fixed;bottom:0;left:0;right:0;
-background:#198754;color:#fff;text-align:center;padding:14px;
-font-weight:600
-}
-
-@keyframes pulse{
-0%{transform:scale(1)}
-50%{transform:scale(1.05)}
-100%{transform:scale(1)}
-}
-
-@media(max-width:900px){
-.credit-side{display:none}
-.mobile-cta{display:block}
-}
+.credit{background:#e6f4ea;padding:15px;border-radius:8px;margin-top:20px}
+.credit a{display:block;text-align:center;background:#198754;color:#fff;padding:14px;border-radius:6px;text-decoration:none}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h1>🌍 Global Postal Code Finder</h1>
-<p class="subtitle">India Pincode • US ZIP • UK Postcode • International</p>
+<div class="box">
+<h1 id="title"></h1>
+<p id="desc"></p>
 
-<input id="q" placeholder="Enter pincode, zip code, postcode, or city">
-<button onclick="search()">Search</button>
-
-<div id="result" class="result"></div>
-<div id="error" class="error"></div>
+<div class="map">
+<iframe id="map" loading="lazy"></iframe>
 </div>
 
-<!-- Credit Score Desktop -->
-<div class="credit-side">
-<h3>💳 Free Credit Score</h3>
-<a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
-Check Now
-</a>
+<div class="credit">
+<h3>💳 Check Your Free Credit Score</h3>
+<a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank">Check Now</a>
 </div>
-
-<!-- Mobile CTA -->
-<a class="mobile-cta" href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank">
-💳 Check Free Credit Score
-</a>
+</div>
 
 <script>
-function detectCountry(q){
-if(/^\d{6}$/.test(q)) return "IN";
-if(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i.test(q)) return "GB";
-if(/^\d{5}$/.test(q)) return "US";
-if(/^[A-Z]\d[A-Z] ?\d[A-Z]\d$/i.test(q)) return "CA";
-return "IN";
-}
+const p=new URLSearchParams(location.search);
+const type=p.get("type");
 
-async function search(){
-const q=document.getElementById("q").value.trim();
-const res=document.getElementById("result");
-const err=document.getElementById("error");
-res.innerHTML=""; err.textContent="";
-if(!q) return;
-
-try{
-const country=detectCountry(q);
-let data;
-
-if(country==="IN"){
-const url=/^\d{6}$/.test(q)
-?`https://api.postalpincode.in/pincode/${q}`
-:`https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
-data=await (await fetch(url)).json();
-if(data[0].Status!=="Success") throw "";
-renderIndia(data[0].PostOffice);
+if(type==="IN"){
+const name=p.get("name");
+const pin=p.get("pincode");
+const district=p.get("district");
+const state=p.get("state");
+document.getElementById("title").innerText=`${name} – ${pin}`;
+document.getElementById("desc").innerText=`${district}, ${state}`;
+document.getElementById("map").src=
+`https://www.google.com/maps?q=${encodeURIComponent(name+','+district)}&output=embed`;
 }else{
-const url=`https://api.zippopotam.us/${country}/${q}`;
-data=await (await fetch(url)).json();
-renderIntl(data);
-}
-}catch{
-err.textContent="No results found.";
-}
-}
-
-function renderIndia(list){
-result.innerHTML=list.map(o=>`
-<div class="card" onclick="this.querySelector('.details').style.display =
-this.querySelector('.details').style.display==='block'?'none':'block'">
-<strong>${o.Name} – ${o.Pincode}</strong><br>
-${o.District}, ${o.State}
-<div class="details">
-<div class="map">
-<iframe loading="lazy"
-src="https://www.google.com/maps?q=${encodeURIComponent(o.Name+','+o.District)}&output=embed">
-</iframe>
-</div>
-</div>
-</div>
-`).join("");
-}
-
-function renderIntl(d){
-result.innerHTML=`
-<div class="card">
-<strong>${d['post code']}</strong><br>
-${d.places[0]['place name']}, ${d.places[0].state}
-<div class="map">
-<iframe loading="lazy"
-src="https://www.google.com/maps?q=${encodeURIComponent(d.places[0]['place name']+','+d.places[0].state)}&output=embed">
-</iframe>
-</div>
-</div>`;
+const code=p.get("code");
+const place=p.get("place");
+const state=p.get("state");
+document.getElementById("title").innerText=`${code}`;
+document.getElementById("desc").innerText=`${place}, ${state}`;
+document.getElementById("map").src=
+`https://www.google.com/maps?q=${encodeURIComponent(place+','+state)}&output=embed`;
 }
 </script>
 
