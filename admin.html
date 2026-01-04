@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Service Admin</title>
+<style>
+body{font-family:Arial;padding:20px}
+input,button{padding:10px;margin:5px}
+textarea{width:100%;height:300px}
+</style>
+</head>
+<body>
+
+<h2>Service Data Admin</h2>
+
+<textarea id="json"></textarea>
+<br>
+<button onclick="save()">Download Updated JSON</button>
+
+<script>
+fetch("locations.json")
+.then(r=>r.text())
+.then(t=>json.value=t);
+
+function save(){
+  const blob=new Blob([json.value],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="locations.json";
+  a.click();
+}
+</script>
+
+</body>
+</html>
