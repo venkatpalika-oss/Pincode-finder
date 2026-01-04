@@ -5,53 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Postal Code Details</title>
-<meta name="description" content="View detailed postal code information including location map and nearby areas.">
+<meta name="description" content="View detailed postal code information with map location.">
 
 <style>
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f4f6f8;
-  margin:0
-}
-.box{
-  max-width:800px;
-  margin:40px auto;
-  background:#fff;
-  padding:25px;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,.1)
-}
-.map{
-  height:300px;
-  margin-top:15px
-}
-.map iframe{
-  width:100%;
-  height:100%;
-  border:0
-}
-.credit{
-  background:#e6f4ea;
-  padding:15px;
-  border-radius:8px;
-  margin-top:25px
-}
-.credit a{
-  display:block;
-  background:#198754;
-  color:#fff;
-  padding:14px;
-  border-radius:6px;
-  text-align:center;
-  text-decoration:none;
-  font-weight:600
-}
+body{font-family:Arial;background:#f4f6f8;margin:0}
+.box{max-width:800px;margin:40px auto;background:#fff;padding:25px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.map{height:300px;margin-top:15px}
+.map iframe{width:100%;height:100%;border:0}
+.flag{font-size:32px}
+.credit{background:#e6f4ea;padding:15px;border-radius:8px;margin-top:25px}
+.credit a{display:block;background:#198754;color:#fff;padding:14px;border-radius:6px;text-align:center;text-decoration:none;font-weight:600}
 </style>
 </head>
 
 <body>
 
 <div class="box">
+  <div class="flag" id="flag"></div>
   <h1 id="title"></h1>
   <p id="desc"></p>
 
@@ -61,44 +31,30 @@ body{
 
   <div class="credit">
     <h3>💳 Check Your Free Credit Score</h3>
-    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-       target="_blank" rel="nofollow sponsored">
+    <a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
       Check Now
     </a>
   </div>
 </div>
 
 <script>
-const p = new URLSearchParams(location.search);
-const country = p.get("country") || "";
+function flag(code){
+  return String.fromCodePoint(...[...code.toUpperCase()].map(c=>127397+c.charCodeAt()));
+}
 
-const title = document.getElementById("title");
-const desc  = document.getElementById("desc");
-const map   = document.getElementById("map");
+const p=new URLSearchParams(location.search);
+const country=p.get("country")||"";
 
-if(country === "IN"){
-  const name     = p.get("name") || "";
-  const pin      = p.get("pin") || "";
-  const district = p.get("district") || "";
-  const state    = p.get("state") || "";
+flagEl.textContent=flag(country);
 
-  title.textContent = `${name} – ${pin}`;
-  desc.textContent  = `${district}${state ? ", " + state : ""}`;
-
-  map.src = `https://www.google.com/maps?q=${encodeURIComponent(
-    name + "," + district + "," + state
-  )}&output=embed`;
-
+if(country==="IN"){
+  title.textContent=`${p.get("name")} – ${p.get("pin")}`;
+  desc.textContent=`${p.get("district")}, ${p.get("state")}`;
+  map.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("name")+","+p.get("district"))}&output=embed`;
 }else{
-  const pin   = p.get("pin") || "";
-  const place = p.get("place") || "";
-  const state = p.get("state") || "";
-
-  title.textContent = pin || "Postal Code";
-  desc.textContent  = `${place}${state ? ", " + state : ""}`;
-
-  const mapQuery = place || pin || country;
-  map.src = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`;
+  title.textContent=p.get("pin");
+  desc.textContent=`${p.get("place")}, ${p.get("state")}`;
+  map.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("place")+","+p.get("state"))}&output=embed`;
 }
 </script>
 
