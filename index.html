@@ -4,12 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- CACHE BUSTING TITLE -->
-  <title>Indian Pincode Finder | Free Credit Score</title>
+  <title>Indian Pincode Finder | City-wise Results</title>
+  <meta name="description" content="Search Indian pincodes by city or pincode. View multiple pincodes with detailed information and maps." />
 
-  <meta name="description" content="Search Indian pincodes or place names using official India Post data. Check your pincode details and free credit score." />
-
-  <!-- Google AdSense -->
+  <!-- AdSense -->
   <script async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
     crossorigin="anonymous"></script>
@@ -52,25 +50,34 @@
 
     button:hover { background:#0056b3; }
 
-    .clear-cache { background:#28a745; }
-    .clear-cache:hover { background:#1e7e34; }
-
     .result {
       display:none;
       margin-top:20px;
-      background:#f1f5ff;
-      padding:20px;
-      border-radius:8px;
     }
 
-    .error {
-      color:red;
-      text-align:center;
-      margin-top:15px;
+    details {
+      background:#f1f5ff;
+      border-radius:8px;
+      padding:12px;
+      margin-bottom:12px;
+      cursor:pointer;
+    }
+
+    summary {
+      font-weight:600;
+      font-size:15px;
+      color:#333;
+      outline:none;
+    }
+
+    .detail-box {
+      margin-top:10px;
+      font-size:14px;
+      color:#333;
     }
 
     .map-container {
-      height:250px;
+      height:220px;
       margin-top:10px;
     }
 
@@ -80,10 +87,10 @@
       border:0;
     }
 
-    .adsense {
-      margin:20px 0;
+    .error {
+      color:red;
       text-align:center;
-      min-height:90px;
+      margin-top:15px;
     }
 
     footer {
@@ -99,138 +106,74 @@
 
 <main class="container">
   <h1>Indian Pincode & Place Finder</h1>
-  <h2 class="subtitle">Search by Pincode or Place Name</h2>
+  <h2 class="subtitle">Search by City or Pincode</h2>
 
-  <input id="searchInput" placeholder="Enter 6-digit Pincode or Place Name">
+  <input id="searchInput" placeholder="Enter city name or 6-digit pincode">
   <button onclick="searchPincode()">Search</button>
-  <button class="clear-cache" onclick="clearCache()">Clear Cache</button>
-
-  <!-- 🔥 CREDIT SCORE (GUARANTEED VISIBLE) -->
-  <div style="
-    background:#198754;
-    color:#fff;
-    padding:20px;
-    border-radius:10px;
-    margin-top:20px;
-    text-align:center;
-  ">
-    <h2 style="margin:0 0 10px 0;">💳 Check Your Free Credit Score</h2>
-    <p style="margin:0 0 15px 0;font-size:14px;">
-      Check your CIBIL score instantly. 100% free & secure.
-    </p>
-    <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-       target="_blank"
-       rel="nofollow sponsored"
-       style="
-         display:inline-block;
-         background:#fff;
-         color:#198754;
-         padding:14px 22px;
-         font-size:16px;
-         font-weight:bold;
-         border-radius:6px;
-         text-decoration:none;
-       ">
-      👉 Check Free Credit Score
-    </a>
-  </div>
-
-  <!-- Top Ad -->
-  <div class="adsense">
-    <ins class="adsbygoogle"
-      style="display:block"
-      data-ad-client="ca-pub-9595967643816732"
-      data-ad-slot="1234567890"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-  </div>
 
   <div id="result" class="result"></div>
-
-  <!-- In-content Ad -->
-  <div id="adsense-container" class="adsense"></div>
-
   <div id="error" class="error"></div>
 </main>
 
 <footer>
   © 2026 Pincode Finder
-  <div class="adsense">
-    <ins class="adsbygoogle"
-      style="display:block"
-      data-ad-client="ca-pub-9595967643816732"
-      data-ad-slot="9876543210"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-  </div>
 </footer>
 
 <script>
-  (adsbygoogle = window.adsbygoogle || []).push({});
+async function searchPincode() {
+  const input = document.getElementById("searchInput");
+  const result = document.getElementById("result");
+  const error = document.getElementById("error");
 
-  async function searchPincode() {
-    const input = document.getElementById("searchInput");
-    const result = document.getElementById("result");
-    const error = document.getElementById("error");
+  const q = input.value.trim();
+  if (!q) return;
 
-    const q = input.value.trim();
-    if (!q) return;
+  result.style.display = "block";
+  result.innerHTML = "Loading...";
+  error.textContent = "";
 
-    result.style.display = "block";
-    result.innerHTML = "Loading...";
-    error.textContent = "";
+  try {
+    const isPin = /^\d{6}$/.test(q);
+    const url = isPin
+      ? `https://api.postalpincode.in/pincode/${q}`
+      : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
 
-    try {
-      const isPin = /^\d{6}$/.test(q);
-      const url = isPin
-        ? `https://api.postalpincode.in/pincode/${q}`
-        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
+    const response = await fetch(url);
+    const data = await response.json();
 
-      const response = await fetch(url);
-      const data = await response.json();
+    if (!data[0] || data[0].Status !== "Success") {
+      result.style.display = "none";
+      error.textContent = "No results found.";
+      return;
+    }
 
-      if (!data[0] || data[0].Status !== "Success") {
-        result.style.display = "none";
-        error.textContent = "No results found.";
-        return;
-      }
+    result.innerHTML = data[0].PostOffice.map(o => `
+      <details>
+        <summary>
+          ${o.Name} – ${o.Pincode}
+        </summary>
 
-      result.innerHTML = data[0].PostOffice.map(o => `
-        <div style="margin-bottom:20px;">
-          <strong>${o.Name}</strong><br>
-          ${o.District}, ${o.State}
+        <div class="detail-box">
+          <strong>Post Office:</strong> ${o.Name}<br>
+          <strong>Pincode:</strong> ${o.Pincode}<br>
+          <strong>District:</strong> ${o.District}<br>
+          <strong>State:</strong> ${o.State}<br>
+          <strong>Branch Type:</strong> ${o.BranchType}
+
           <div class="map-container">
             <iframe loading="lazy"
-              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District)}&output=embed">
+              src="https://www.google.com/maps?q=${encodeURIComponent(o.Name + ',' + o.District + ',' + o.State)}&output=embed">
             </iframe>
           </div>
         </div>
-      `).join("");
+      </details>
+    `).join("");
 
-      loadInContentAd();
-
-    } catch {
-      result.style.display = "none";
-      error.textContent = "Unable to fetch data. Please try again.";
-    }
+  } catch {
+    result.style.display = "none";
+    error.textContent = "Unable to fetch data. Please try again.";
   }
-
-  function loadInContentAd() {
-    const adBox = document.getElementById("adsense-container");
-    adBox.innerHTML = `
-      <ins class="adsbygoogle"
-        style="display:block"
-        data-ad-client="ca-pub-9595967643816732"
-        data-ad-slot="1234567890"
-        data-ad-format="auto"
-        data-full-width-responsive="true"></ins>`;
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  }
-
-  function clearCache() {
-    localStorage.clear();
-    alert("Cache cleared");
-  }
+}
 </script>
 
 </body>
