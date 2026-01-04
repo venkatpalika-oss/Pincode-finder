@@ -4,236 +4,203 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Global Postal Code Finder | PIN, ZIP & Postcode Lookup</title>
-<meta name="description" content="Find Indian PIN codes and international ZIP/postal codes by city or code. Free, fast & accurate global postal lookup.">
+<title>Global Postal Code Finder | PIN, ZIP & Postcodes</title>
+<meta name="description" content="Search postal codes by city or code. India PIN codes, US ZIP, UK postcodes & global lookup with maps.">
 
 <style>
 :root{
-  --primary:#0d6efd;
-  --secondary:#198754;
   --bg:#f4f6f8;
   --card:#ffffff;
+  --text:#222;
+  --sub:#666;
+  --primary:#007bff;
+  --credit:#198754;
+}
+[data-theme="dark"]{
+  --bg:#121212;
+  --card:#1e1e1e;
+  --text:#f5f5f5;
+  --sub:#aaa;
+  --primary:#4da3ff;
+  --credit:#2ea56b;
 }
 
 body{
-  margin:0;
   font-family:Arial,Helvetica,sans-serif;
   background:var(--bg);
+  color:var(--text);
+  margin:0
 }
-
-/* Layout */
-.wrapper{
-  max-width:1100px;
-  margin:30px auto;
-  padding:0 15px;
-}
-
-.hero{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  color:#fff;
-  padding:40px 20px;
-  border-radius:14px;
-  text-align:center;
-}
-
-.hero h1{margin:0;font-size:32px}
-.hero p{margin-top:10px;font-size:15px;opacity:.95}
-
-.search-box{
-  background:#fff;
-  padding:20px;
+.container{
+  max-width:950px;
+  margin:40px auto;
+  background:var(--card);
+  padding:25px;
   border-radius:12px;
-  margin-top:-30px;
-  box-shadow:0 6px 18px rgba(0,0,0,.12);
+  box-shadow:0 4px 12px rgba(0,0,0,.15)
 }
+h1{text-align:center}
+.subtitle{text-align:center;color:var(--sub);font-size:14px}
 
 select,input,button{
-  width:100%;
-  padding:14px;
-  font-size:16px;
-  border-radius:8px;
-  margin-top:10px;
+  width:100%;padding:14px;font-size:16px;border-radius:8px;margin-top:10px
 }
-
 select,input{border:1px solid #ccc}
 button{
-  background:var(--primary);
-  color:#fff;
-  border:none;
-  cursor:pointer;
+  background:var(--primary);color:#fff;border:none;cursor:pointer
 }
 button:hover{opacity:.9}
 
-/* Results */
-.results{margin-top:20px}
 .card{
-  background:var(--card);
-  padding:16px;
-  border-radius:10px;
-  margin-bottom:12px;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-  cursor:pointer;
-  transition:.2s;
+  padding:14px;border-bottom:1px solid #ddd;cursor:pointer
 }
-.card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 6px 16px rgba(0,0,0,.15);
-}
+.card:hover{background:rgba(0,123,255,.08)}
 
 .error{text-align:center;color:red;margin-top:15px}
 
-/* Credit Score */
-.credit-desktop{
-  position:fixed;
-  right:20px;
-  top:120px;
-  width:260px;
-  background:#e6f4ea;
-  padding:18px;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,.15);
-}
-.credit-desktop a{
-  display:block;
-  background:var(--secondary);
-  color:#fff;
-  text-align:center;
-  padding:14px;
-  border-radius:8px;
-  text-decoration:none;
-  font-weight:bold;
-  margin-top:10px;
-  animation:pulse 2.5s infinite;
+/* Dark toggle */
+.toggle{
+  position:fixed;top:15px;right:15px;
+  background:var(--card);
+  border-radius:50px;
+  padding:8px 12px;
+  cursor:pointer;
+  font-size:14px
 }
 
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(25,135,84,.6)}
-  70%{box-shadow:0 0 0 10px rgba(25,135,84,0)}
-  100%{box-shadow:0 0 0 0 rgba(25,135,84,0)}
+/* Credit */
+.credit-side{
+position:fixed;right:20px;top:120px;width:260px;
+background:#e6f4ea;padding:15px;border-radius:10px
+}
+.credit-side a{
+display:block;background:var(--credit);color:#fff;
+padding:14px;border-radius:6px;text-align:center;text-decoration:none;font-weight:600
 }
 
-/* Mobile CTA */
 .mobile-cta{
-  display:none;
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:var(--secondary);
-  color:#fff;
-  padding:14px 18px;
-  font-weight:bold;
-  text-align:center;
-  text-decoration:none;
+display:none;position:fixed;bottom:0;left:0;right:0;
+background:var(--credit);color:#fff;text-align:center;
+padding:14px;font-weight:600;text-decoration:none
 }
 
 @media(max-width:900px){
-  .credit-desktop{display:none}
-  .mobile-cta{display:block}
-  body{padding-bottom:70px}
+.credit-side{display:none}
+.mobile-cta{display:block}
+body{padding-bottom:70px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="toggle" onclick="toggleTheme()">🌙 / ☀️</div>
 
-  <div class="hero">
-    <h1>🌍 Global Postal Code Finder</h1>
-    <p>India PIN • US ZIP • UK Postcode • Worldwide Lookup</p>
-  </div>
+<div class="container">
+<h1>🌍 Global Postal Code Finder</h1>
+<p class="subtitle">India PIN • US ZIP • UK • Canada • Europe • Japan</p>
 
-  <div class="search-box">
-    <select id="country">
-      <option value="IN">🇮🇳 India</option>
-      <option value="US">🇺🇸 United States</option>
-      <option value="GB">🇬🇧 United Kingdom</option>
-      <option value="CA">🇨🇦 Canada</option>
-      <option value="AU">🇦🇺 Australia</option>
-      <option value="DE">🇩🇪 Germany</option>
-      <option value="FR">🇫🇷 France</option>
-      <option value="JP">🇯🇵 Japan</option>
-    </select>
+<select id="country">
+  <option value="IN">🇮🇳 India</option>
+  <option value="US">🇺🇸 United States</option>
+  <option value="GB">🇬🇧 United Kingdom</option>
+  <option value="CA">🇨🇦 Canada</option>
+  <option value="AU">🇦🇺 Australia</option>
+  <option value="DE">🇩🇪 Germany</option>
+  <option value="FR">🇫🇷 France</option>
+  <option value="JP">🇯🇵 Japan</option>
+</select>
 
-    <input id="q" placeholder="Enter city name or postal code">
-    <button onclick="search()">Search</button>
-  </div>
+<input id="q" placeholder="Enter city or postal code">
+<button onclick="search()">Search</button>
 
-  <div id="results" class="results"></div>
-  <div id="error" class="error"></div>
+<div id="result"></div>
+<div id="error" class="error"></div>
 
+<hr>
+<h3>🔥 Popular City Searches</h3>
+<div id="cities"></div>
 </div>
 
-<!-- Credit Score Desktop -->
-<div class="credit-desktop">
-  <h3>💳 Free Credit Score</h3>
-  <p style="font-size:14px">
-    Check your CIBIL score instantly.<br>Free via Paisabazaar.
-  </p>
-  <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-     target="_blank" rel="nofollow sponsored">
-    Check Now
-  </a>
-</div>
-
-<!-- Mobile CTA -->
-<a class="mobile-cta"
-   href="https://www.paisabazaar.com/?affid=PB005260220213"
-   target="_blank">
-  💳 Check Free Credit Score
+<div class="credit-side">
+<h3>💳 Free Credit Score</h3>
+<a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
+Check Now
 </a>
+</div>
+
+<a class="mobile-cta"
+href="https://www.paisabazaar.com/?affid=PB005260220213"
+target="_blank">💳 Check Free Credit Score</a>
 
 <script>
-const OPENCAGE_KEY = "YOUR_OPENCAGE_KEY";
+const OPENCAGE_KEY="YOUR_OPENCAGE_KEY_HERE";
 
+/* Popular landing pages */
+const popularCities=[
+  {c:"IN",n:"Bangalore"},
+  {c:"IN",n:"Hyderabad"},
+  {c:"IN",n:"Mumbai"},
+  {c:"US",n:"New York"},
+  {c:"US",n:"Los Angeles"},
+  {c:"GB",n:"London"},
+  {c:"CA",n:"Toronto"},
+  {c:"AU",n:"Sydney"}
+];
+
+popularCities.forEach(x=>{
+  cities.innerHTML+=`
+  <div class="card" onclick="
+    country.value='${x.c}';
+    q.value='${x.n}';
+    search()
+  ">
+  🌍 ${x.n} Postal Codes
+  </div>`;
+});
+
+/* Search */
 async function search(){
-  const q = document.getElementById("q").value.trim();
-  const country = document.getElementById("country").value;
-  const results = document.getElementById("results");
-  const error = document.getElementById("error");
-
-  results.innerHTML=""; error.textContent="";
-  if(!q) return;
+  const qv=q.value.trim();
+  const c=country.value;
+  result.innerHTML=""; error.textContent="";
+  if(!qv) return;
 
   try{
-    if(country==="IN"){
-      const url=/^\d{6}$/.test(q)
-        ?`https://api.postalpincode.in/pincode/${q}`
-        :`https://api.postalpincode.in/postoffice/${encodeURIComponent(q)}`;
+    if(c==="IN"){
+      const url=/^\d{6}$/.test(qv)
+      ?`https://api.postalpincode.in/pincode/${qv}`
+      :`https://api.postalpincode.in/postoffice/${encodeURIComponent(qv)}`;
 
       const d=await (await fetch(url)).json();
       if(d[0].Status!=="Success") throw "";
 
       d[0].PostOffice.forEach(o=>{
-        results.innerHTML+=`
-        <div class="card" onclick="openIndia(
+        result.innerHTML+=`
+        <div class="card" onclick="goIN(
           '${o.Name}','${o.Pincode}','${o.District}','${o.State}'
         )">
-          🇮🇳 <strong>${o.Name} – ${o.Pincode}</strong><br>
-          ${o.District}, ${o.State}
+        🇮🇳 <strong>${o.Name}</strong> – ${o.Pincode}<br>
+        ${o.District}, ${o.State}
         </div>`;
       });
       return;
     }
 
-    const geoURL=
-      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(q)}&countrycode=${country.toLowerCase()}&key=${OPENCAGE_KEY}&limit=3`;
-
-    const geo=await (await fetch(geoURL)).json();
-    if(!geo.results.length) throw "";
+    const geo=await (await fetch(
+      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(qv)}&countrycode=${c.toLowerCase()}&limit=3&key=${OPENCAGE_KEY}`
+    )).json();
 
     geo.results.forEach(r=>{
-      const c=r.components;
-      results.innerHTML+=`
-      <div class="card" onclick="openIntl(
-        '${country}',
-        '${c.postcode||""}',
-        '${c.city||c.town||c.village||q}',
-        '${c.state||""}'
+      const x=r.components;
+      result.innerHTML+=`
+      <div class="card" onclick="goINT(
+        '${c}','${x.postcode||""}',
+        '${x.city||x.town||x.village||qv}',
+        '${x.state||""}'
       )">
-        🌍 <strong>${c.postcode||"Postal code not available"}</strong><br>
-        ${c.city||c.town||c.village||q}, ${c.state||""}
+      🌍 <strong>${x.postcode||"Postal code not available"}</strong><br>
+      ${x.city||x.town||x.village||qv}, ${x.state||""}
       </div>`;
     });
 
@@ -242,17 +209,20 @@ async function search(){
   }
 }
 
-function openIndia(name,pin,district,state){
-  location.href=`detail.html?country=IN&name=${encodeURIComponent(name)}
-  &pin=${pin}&district=${encodeURIComponent(district)}
-  &state=${encodeURIComponent(state)}`;
+function goIN(n,p,d,s){
+ location.href=`detail.html?country=IN&name=${encodeURIComponent(n)}&pin=${p}&district=${encodeURIComponent(d)}&state=${encodeURIComponent(s)}`;
+}
+function goINT(c,p,pl,s){
+ location.href=`detail.html?country=${c}&pin=${p}&place=${encodeURIComponent(pl)}&state=${encodeURIComponent(s)}`;
 }
 
-function openIntl(country,pin,place,state){
-  location.href=`detail.html?country=${country}&pin=${encodeURIComponent(pin)}
-  &place=${encodeURIComponent(place)}
-  &state=${encodeURIComponent(state)}`;
+/* Dark mode */
+function toggleTheme(){
+ document.body.dataset.theme=
+ document.body.dataset.theme==="dark"?"":"dark";
+ localStorage.theme=document.body.dataset.theme;
 }
+if(localStorage.theme==="dark") document.body.dataset.theme="dark";
 </script>
 
 </body>
