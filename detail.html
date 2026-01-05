@@ -5,59 +5,72 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Postal Code Details</title>
-<meta name="description" content="Detailed postal code information with location map.">
+<meta name="description" content="Detailed postal code information with maps and nearby areas.">
 
-<!-- ✅ Google AdSense -->
-<script async
- src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX"
- crossorigin="anonymous"></script>
+<!-- Google Analytics GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-5644DXJGXX', { anonymize_ip: true });
+</script>
 
 <style>
 body{font-family:Arial;background:#f4f6f8;margin:0}
-.box{max-width:800px;margin:40px auto;background:#fff;padding:25px;border-radius:10px}
+.box{
+max-width:800px;margin:40px auto;background:#fff;
+padding:25px;border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,.1)
+}
 .map{height:300px;margin-top:15px}
 .map iframe{width:100%;height:100%;border:0}
-.credit{background:#e6f4ea;padding:15px;border-radius:8px;margin-top:20px}
-.credit a{display:block;background:#198754;color:#fff;padding:12px;text-align:center;border-radius:6px;text-decoration:none}
+.credit{
+background:#e6f4ea;padding:15px;border-radius:8px;margin-top:25px
+}
+.credit a{
+display:block;background:#198754;color:#fff;
+padding:14px;border-radius:6px;text-align:center;
+text-decoration:none;font-weight:600
+}
 </style>
 </head>
 
 <body>
+
 <div class="box">
 <h1 id="title"></h1>
 <p id="desc"></p>
 
-<div class="map"><iframe id="map"></iframe></div>
-
-<!-- ✅ AdSense: Detail page -->
-<div style="margin:20px 0;text-align:center">
-<ins class="adsbygoogle"
- style="display:block"
- data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
- data-ad-slot="2222222222"
- data-ad-format="auto"
- data-full-width-responsive="true"></ins>
+<div class="map">
+<iframe id="map" loading="lazy"></iframe>
 </div>
-<script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
 
 <div class="credit">
-<h3>💳 Free Credit Score</h3>
+<h3>💳 Check Your Free Credit Score</h3>
 <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-target="_blank" rel="nofollow sponsored">Check Now</a>
+target="_blank"
+rel="nofollow sponsored"
+onclick="gtag('event','credit_click',{location:'detail'})">
+Check Now
+</a>
 </div>
 </div>
 
 <script>
 const p=new URLSearchParams(location.search);
+const t=title,d=desc,m=map;
+
 if(p.get("country")==="IN"){
- title.textContent=`${p.get("name")} – ${p.get("pin")}`;
- desc.textContent=`${p.get("district")}, ${p.get("state")}`;
- map.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("name")+","+p.get("district"))}&output=embed`;
+t.textContent=`${p.get("name")} – ${p.get("pin")}`;
+d.textContent=`${p.get("district")}, ${p.get("state")}`;
+m.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("name")+","+p.get("district")+","+p.get("state"))}&output=embed`;
 }else{
- title.textContent=p.get("pin")||"Postal Code";
- desc.textContent=`${p.get("place")}, ${p.get("state")}`;
- map.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("place"))}&output=embed`;
+t.textContent=p.get("pin")||"Postal Code";
+d.textContent=`${p.get("place")}, ${p.get("state")}`;
+m.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("place")+","+p.get("state"))}&output=embed`;
 }
 </script>
+
 </body>
 </html>
