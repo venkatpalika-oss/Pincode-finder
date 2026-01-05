@@ -4,129 +4,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title id="seoTitle">Postal Code Services</title>
-<meta name="description" id="seoDesc">
+<title>Postal Code Details</title>
+<meta name="description" content="Detailed postal code information with location map.">
+
+<!-- ✅ Google AdSense -->
+<script async
+ src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX"
+ crossorigin="anonymous"></script>
 
 <style>
 body{font-family:Arial;background:#f4f6f8;margin:0}
-.box{max-width:800px;margin:40px auto;background:#fff;padding:25px;border-radius:12px}
+.box{max-width:800px;margin:40px auto;background:#fff;padding:25px;border-radius:10px}
 .map{height:300px;margin-top:15px}
 .map iframe{width:100%;height:100%;border:0}
-
-.service{padding:10px;border-bottom:1px solid #eee}
-.yes{color:green;font-weight:600}
-.no{color:red;font-weight:600}
-.note{background:#fff3cd;padding:10px;border-radius:6px;margin:10px 0}
-
-.credit{background:#e6f4ea;padding:15px;border-radius:8px;margin-top:25px}
-.credit a{display:block;background:#198754;color:#fff;padding:14px;border-radius:6px;text-align:center;text-decoration:none;font-weight:600}
+.credit{background:#e6f4ea;padding:15px;border-radius:8px;margin-top:20px}
+.credit a{display:block;background:#198754;color:#fff;padding:12px;text-align:center;border-radius:6px;text-decoration:none}
 </style>
 </head>
 
 <body>
-
 <div class="box">
 <h1 id="title"></h1>
 <p id="desc"></p>
 
-<div class="map"><iframe id="map" loading="lazy"></iframe></div>
+<div class="map"><iframe id="map"></iframe></div>
 
-<h2>📦 Services Available</h2>
-<div id="services">Loading services…</div>
+<!-- ✅ AdSense: Detail page -->
+<div style="margin:20px 0;text-align:center">
+<ins class="adsbygoogle"
+ style="display:block"
+ data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+ data-ad-slot="2222222222"
+ data-ad-format="auto"
+ data-full-width-responsive="true"></ins>
+</div>
+<script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
 
 <div class="credit">
 <h3>💳 Free Credit Score</h3>
-<a href="https://www.paisabazaar.com/?affid=PB005260220213" target="_blank" rel="nofollow sponsored">
-Check Now
-</a>
+<a href="https://www.paisabazaar.com/?affid=PB005260220213"
+target="_blank" rel="nofollow sponsored">Check Now</a>
 </div>
 </div>
 
 <script>
-/* ------------------ URL / SEO ------------------ */
-const p = new URLSearchParams(location.search);
-const pin = p.get("pin");
-const country = p.get("country") || "IN";
-
-/* ------------------ MAP + SEO ------------------ */
-title.textContent = `PIN Code ${pin}`;
-desc.textContent = `Service availability for postal code ${pin}`;
-map.src = `https://www.google.com/maps?q=${pin}&output=embed`;
-
-seoTitle.textContent = `PIN Code ${pin} – Service Availability`;
-seoDesc.content = `Check delivery, COD, and other services available for PIN code ${pin}.`;
-
-/* ------------------ DISTANCE LOGIC ------------------ */
-function distanceKm(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a =
-    Math.sin(dLat/2)**2 +
-    Math.cos(lat1*Math.PI/180) *
-    Math.cos(lat2*Math.PI/180) *
-    Math.sin(dLon/2)**2;
-  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-}
-
-/* ------------------ LOAD DATA ------------------ */
-Promise.all([
-  fetch("services.json").then(r=>r.json()),
-  fetch("locations.json").then(r=>r.json())
-]).then(([serviceMaster, locations])=>{
-
-  const box = document.getElementById("services");
-
-  /* EXACT PIN */
-  if (locations[pin]) {
-    renderServices(pin, locations[pin], serviceMaster);
-    return;
-  }
-
-  /* NEAREST PIN */
-  let nearest=null, min=Infinity;
-  const user = locations[Object.keys(locations)[0]]; // fallback coords
-
-  for (const pincode in locations) {
-    const l = locations[pincode];
-    const d = distanceKm(user.lat, user.lng, l.lat, l.lng);
-    if (d < min) {
-      min = d;
-      nearest = { pin:pincode, data:l, dist:d.toFixed(1) };
-    }
-  }
-
-  box.innerHTML =
-    `<div class="note">
-      Services not available for this PIN.<br>
-      Showing nearest serviceable PIN <strong>${nearest.pin}</strong>
-      (${nearest.dist} km away)
-     </div>`;
-
-  renderServices(nearest.pin, nearest.data, serviceMaster);
-
-});
-
-/* ------------------ RENDER ------------------ */
-function renderServices(pin, loc, master) {
-  const box = document.getElementById("services");
-  let html = "";
-
-  for (const k in loc.services) {
-    const s = loc.services[k];
-    html += `
-      <div class="service">
-        <strong>${master[k]?.name || k}</strong> :
-        <span class="${s.available?'yes':'no'}">
-          ${s.available?'Available':'Not Available'}
-        </span>
-        ${s.eta?` | ${s.eta}`:""}
-        ${s.price?` | ${s.price}`:""}
-      </div>`;
-  }
-  box.innerHTML += html;
+const p=new URLSearchParams(location.search);
+if(p.get("country")==="IN"){
+ title.textContent=`${p.get("name")} – ${p.get("pin")}`;
+ desc.textContent=`${p.get("district")}, ${p.get("state")}`;
+ map.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("name")+","+p.get("district"))}&output=embed`;
+}else{
+ title.textContent=p.get("pin")||"Postal Code";
+ desc.textContent=`${p.get("place")}, ${p.get("state")}`;
+ map.src=`https://www.google.com/maps?q=${encodeURIComponent(p.get("place"))}&output=embed`;
 }
 </script>
-
 </body>
 </html>
