@@ -7,42 +7,73 @@
 <title>Global Postal Code Finder | PIN, ZIP & Postcodes</title>
 <meta name="description" content="Search postal codes by city or code. India PIN codes, US ZIP, UK postcodes & global lookup with maps.">
 
-<!-- ✅ Google AdSense -->
-<script async
-  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX"
-  crossorigin="anonymous"></script>
+<!-- Google Analytics GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-5644DXJGXX', { anonymize_ip: true });
+</script>
+
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
+crossorigin="anonymous"></script>
 
 <style>
 :root{
-  --bg:#f4f6f8;--card:#fff;--text:#222;--sub:#666;
-  --primary:#007bff;--credit:#198754
+--bg:#f4f6f8;--card:#fff;--text:#222;--sub:#666;
+--primary:#007bff;--credit:#198754
 }
 [data-theme="dark"]{
-  --bg:#121212;--card:#1e1e1e;--text:#f5f5f5;--sub:#aaa;
+--bg:#121212;--card:#1e1e1e;--text:#f5f5f5;--sub:#aaa;
+--primary:#4da3ff;--credit:#2ea56b
 }
-body{font-family:Arial;background:var(--bg);color:var(--text);margin:0}
-.container{max-width:950px;margin:40px auto;background:var(--card);
-padding:25px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+body{margin:0;font-family:Arial;background:var(--bg);color:var(--text)}
+.container{
+max-width:950px;margin:40px auto;background:var(--card);
+padding:25px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15)
+}
 h1{text-align:center}
-.subtitle{text-align:center;color:var(--sub)}
-select,input,button{width:100%;padding:14px;margin-top:10px;border-radius:8px}
-button{background:var(--primary);color:#fff;border:none}
-.card{padding:14px;border-bottom:1px solid #ddd;cursor:pointer}
+.subtitle{text-align:center;color:var(--sub);font-size:14px}
+select,input,button{
+width:100%;padding:14px;font-size:16px;border-radius:8px;margin-top:10px
+}
+select,input{border:1px solid #ccc}
+button{background:var(--primary);color:#fff;border:none;cursor:pointer}
+.card{
+padding:14px;border-bottom:1px solid #ddd;cursor:pointer
+}
 .card:hover{background:rgba(0,123,255,.08)}
 .error{text-align:center;color:red;margin-top:15px}
-.toggle{position:fixed;top:15px;right:15px;cursor:pointer}
 
+/* Credit */
 .credit-side{
 position:fixed;right:20px;top:120px;width:260px;
 background:#e6f4ea;padding:15px;border-radius:10px
 }
 .credit-side a{
 display:block;background:var(--credit);color:#fff;
-padding:14px;border-radius:6px;text-align:center;text-decoration:none
+padding:14px;border-radius:6px;text-align:center;text-decoration:none;font-weight:600
+}
+
+/* Mobile CTA */
+.mobile-cta{
+display:none;position:fixed;bottom:0;left:0;right:0;
+background:var(--credit);color:#fff;text-align:center;
+padding:14px;font-weight:600;text-decoration:none
+}
+
+.toggle{
+position:fixed;top:15px;right:15px;
+background:var(--card);padding:8px 12px;border-radius:50px;
+cursor:pointer;font-size:14px
 }
 
 @media(max-width:900px){
 .credit-side{display:none}
+.mobile-cta{display:block}
+body{padding-bottom:70px}
 }
 </style>
 </head>
@@ -53,7 +84,7 @@ padding:14px;border-radius:6px;text-align:center;text-decoration:none
 
 <div class="container">
 <h1>🌍 Global Postal Code Finder</h1>
-<p class="subtitle">India PIN • US ZIP • UK • Canada • Europe • Japan</p>
+<p class="subtitle">🇮🇳 India PIN • 🇺🇸 US ZIP • 🇬🇧 UK • 🇨🇦 Canada • 🇯🇵 Japan</p>
 
 <select id="country">
 <option value="IN">🇮🇳 India</option>
@@ -69,91 +100,96 @@ padding:14px;border-radius:6px;text-align:center;text-decoration:none
 <input id="q" placeholder="Enter city or postal code">
 <button onclick="search()">Search</button>
 
-<!-- ✅ AdSense: Top placement -->
-<div style="margin:20px 0;text-align:center">
-<ins class="adsbygoogle"
- style="display:block"
- data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
- data-ad-slot="1111111111"
- data-ad-format="auto"
- data-full-width-responsive="true"></ins>
-</div>
-<script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
-
 <div id="result"></div>
 <div id="error" class="error"></div>
-
-<hr>
-<h3>🔥 Popular City Postal Codes</h3>
-<div class="card" onclick="quick('IN','Mumbai')">Mumbai PIN Codes</div>
-<div class="card" onclick="quick('IN','Delhi')">Delhi PIN Codes</div>
-<div class="card" onclick="quick('US','New York')">New York ZIP Codes</div>
-<div class="card" onclick="quick('GB','London')">London Postcodes</div>
-
 </div>
 
+<!-- Credit Score -->
 <div class="credit-side">
 <h3>💳 Free Credit Score</h3>
 <a href="https://www.paisabazaar.com/?affid=PB005260220213"
-target="_blank" rel="nofollow sponsored">Check Now</a>
+target="_blank"
+rel="nofollow sponsored"
+onclick="gtag('event','credit_click',{location:'index'})">
+Check Now
+</a>
 </div>
 
-<script>
-const OPENCAGE_KEY="YOUR_OPENCAGE_KEY";
+<a class="mobile-cta"
+href="https://www.paisabazaar.com/?affid=PB005260220213"
+target="_blank"
+onclick="gtag('event','credit_click',{location:'mobile'})">
+💳 Check Free Credit Score
+</a>
 
-function quick(c,v){
- country.value=c; q.value=v; search();
-}
+<script>
+const OPENCAGE_KEY="YOUR_OPENCAGE_KEY_HERE";
 
 async function search(){
- result.innerHTML=""; error.textContent="";
- const v=q.value.trim(); if(!v) return;
- try{
-  if(country.value==="IN"){
-   const u=/^\d{6}$/.test(v)?
-   `https://api.postalpincode.in/pincode/${v}`:
-   `https://api.postalpincode.in/postoffice/${v}`;
-   const d=await (await fetch(u)).json();
-   if(d[0].Status!=="Success") throw "";
-   d[0].PostOffice.forEach(o=>{
-    result.innerHTML+=`
-    <div class="card" onclick="goIN(
-    '${o.Name}','${o.Pincode}','${o.District}','${o.State}')">
-    🇮🇳 <b>${o.Name}</b> – ${o.Pincode}<br>${o.District}, ${o.State}
-    </div>`;
-   });
-   return;
-  }
+const qv=q.value.trim();
+const c=country.value;
+result.innerHTML=""; error.textContent="";
+if(!qv) return;
 
-  const g=await (await fetch(
-  `https://api.opencagedata.com/geocode/v1/json?q=${v}&countrycode=${country.value.toLowerCase()}&key=${OPENCAGE_KEY}`
-  )).json();
+gtag('event','search',{search_term:qv,country:c});
 
-  g.results.forEach(r=>{
-   const x=r.components;
-   result.innerHTML+=`
-   <div class="card" onclick="goINT(
-   '${country.value}','${x.postcode||""}',
-   '${x.city||x.town||v}','${x.state||""}')">
-   🌍 <b>${x.postcode||"Postal code not available"}</b><br>
-   ${x.city||x.town||v}, ${x.state||""}
-   </div>`;
-  });
- }catch{ error.textContent="No results found."; }
+try{
+if(c==="IN"){
+const url=/^\d{6}$/.test(qv)
+?`https://api.postalpincode.in/pincode/${qv}`
+:`https://api.postalpincode.in/postoffice/${encodeURIComponent(qv)}`;
+
+const d=await (await fetch(url)).json();
+if(d[0].Status!=="Success") throw "";
+
+d[0].PostOffice.forEach(o=>{
+result.innerHTML+=`
+<div class="card" onclick="goIN(
+'${o.Name}','${o.Pincode}','${o.District}','${o.State}'
+)">
+🇮🇳 <strong>${o.Name}</strong> – ${o.Pincode}<br>
+${o.District}, ${o.State}
+</div>`;
+});
+return;
+}
+
+const geo=await (await fetch(
+`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(qv)}&countrycode=${c.toLowerCase()}&limit=3&key=${OPENCAGE_KEY}`
+)).json();
+
+geo.results.forEach(r=>{
+const x=r.components;
+result.innerHTML+=`
+<div class="card" onclick="goINT(
+'${c}','${x.postcode||""}',
+'${x.city||x.town||x.village||qv}',
+'${x.state||""}'
+)">
+🌍 <strong>${x.postcode||"Postal code not available"}</strong><br>
+${x.city||x.town||x.village||qv}, ${x.state||""}
+</div>`;
+});
+
+}catch{
+error.textContent="No results found.";
+}
 }
 
 function goIN(n,p,d,s){
- location.href=`detail.html?country=IN&name=${encodeURIComponent(n)}&pin=${p}&district=${encodeURIComponent(d)}&state=${encodeURIComponent(s)}`;
+location.href=`detail.html?country=IN&name=${encodeURIComponent(n)}&pin=${p}&district=${encodeURIComponent(d)}&state=${encodeURIComponent(s)}`;
 }
 function goINT(c,p,pl,s){
- location.href=`detail.html?country=${c}&pin=${p}&place=${encodeURIComponent(pl)}&state=${encodeURIComponent(s)}`;
+location.href=`detail.html?country=${c}&pin=${p}&place=${encodeURIComponent(pl)}&state=${encodeURIComponent(s)}`;
 }
+
 function toggleTheme(){
- document.body.dataset.theme=
- document.body.dataset.theme==="dark"?"":"dark";
- localStorage.theme=document.body.dataset.theme;
+document.body.dataset.theme=
+document.body.dataset.theme==="dark"?"":"dark";
+localStorage.theme=document.body.dataset.theme;
 }
 if(localStorage.theme==="dark") document.body.dataset.theme="dark";
 </script>
+
 </body>
 </html>
