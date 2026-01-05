@@ -1,1 +1,131 @@
-<script src="pagead2.googlesyndication.com/..."></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Postal Code Search Tool | Find PIN, ZIP & Postcodes</title>
+<meta name="description" content="Search postal codes by city or area. Supports India PIN codes, US ZIP codes, UK postcodes and more.">
+
+<!-- Google Analytics (ALLOWED) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-5644DXJGXX', { anonymize_ip: true });
+</script>
+
+<style>
+body{margin:0;font-family:Arial;background:#f4f6f8;color:#222}
+.container{
+max-width:900px;margin:40px auto;background:#fff;
+padding:25px;border-radius:12px
+}
+h1{text-align:center}
+.helper{text-align:center;color:#555;font-size:14px}
+select,input,button{
+width:100%;padding:14px;font-size:16px;
+border-radius:8px;margin-top:12px
+}
+button{background:#007bff;color:#fff;border:none;cursor:pointer}
+.card{padding:14px;border-bottom:1px solid #ddd;cursor:pointer}
+.card:hover{background:#eef5ff}
+.error{text-align:center;color:red;margin-top:15px}
+.back{display:block;text-align:center;margin-top:20px}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🔍 Postal Code Search</h1>
+<p class="helper">
+Search by city name or enter a postal code to find location details.
+</p>
+
+<select id="country">
+<option value="IN">🇮🇳 India</option>
+<option value="US">🇺🇸 United States</option>
+<option value="GB">🇬🇧 United Kingdom</option>
+<option value="CA">🇨🇦 Canada</option>
+<option value="AU">🇦🇺 Australia</option>
+<option value="DE">🇩🇪 Germany</option>
+<option value="FR">🇫🇷 France</option>
+<option value="JP">🇯🇵 Japan</option>
+</select>
+
+<input id="q" placeholder="Enter city or postal code">
+<button onclick="search()">Search</button>
+
+<div id="result"></div>
+<div id="error" class="error"></div>
+
+<a class="back" href="index.html">← Back to Home</a>
+
+</div>
+
+<script>
+const OPENCAGE_KEY="YOUR_OPENCAGE_KEY_HERE";
+
+async function search(){
+const qv=q.value.trim();
+const c=country.value;
+result.innerHTML=""; error.textContent="";
+if(!qv) return;
+
+gtag('event','search',{search_term:qv,country:c});
+
+try{
+if(c==="IN"){
+const url=/^\d{6}$/.test(qv)
+?`https://api.postalpincode.in/pincode/${qv}`
+:`https://api.postalpincode.in/postoffice/${encodeURIComponent(qv)}`;
+
+const d=await (await fetch(url)).json();
+if(d[0].Status!=="Success") throw "";
+
+d[0].PostOffice.forEach(o=>{
+result.innerHTML+=`
+<div class="card" onclick="goIN(
+'${o.Name}','${o.Pincode}','${o.District}','${o.State}'
+)">
+🇮🇳 <strong>${o.Name}</strong> – ${o.Pincode}<br>
+${o.District}, ${o.State}
+</div>`;
+});
+return;
+}
+
+const geo=await (await fetch(
+`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(qv)}&countrycode=${c.toLowerCase()}&limit=3&key=${OPENCAGE_KEY}`
+)).json();
+
+geo.results.forEach(r=>{
+const x=r.components;
+result.innerHTML+=`
+<div class="card" onclick="goINT(
+'${c}','${x.postcode||""}',
+'${x.city||x.town||x.village||qv}',
+'${x.state||""}'
+)">
+🌍 <strong>${x.postcode||"Postal code not available"}</strong><br>
+${x.city||x.town||x.village||qv}, ${x.state||""}
+</div>`;
+});
+
+}catch{
+error.textContent="No results found.";
+}
+}
+
+function goIN(n,p,d,s){
+location.href=`detail.html?country=IN&name=${encodeURIComponent(n)}&pin=${p}&district=${encodeURIComponent(d)}&state=${encodeURIComponent(s)}`;
+}
+function goINT(c,p,pl,s){
+location.href=`detail.html?country=${c}&pin=${p}&place=${encodeURIComponent(pl)}&state=${encodeURIComponent(s)}`;
+}
+</script>
+
+</body>
+</html>
