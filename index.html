@@ -23,41 +23,93 @@ crossorigin="anonymous"></script>
 <style>
 :root{
   --primary:#0d6efd;
-  --dark:#111;
   --bg:#f4f6f8;
+  --card:#ffffff;
+  --text:#222;
+  --muted:#555;
+  --dot:rgba(13,110,253,.25);
 }
+
+/* Dark mode */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1220;
+    --card:#0f172a;
+    --text:#e5e7eb;
+    --muted:#9ca3af;
+    --dot:rgba(96,165,250,.35);
+  }
+}
+
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
   background:var(--bg);
-  color:#222;
+  color:var(--text);
   line-height:1.6;
 }
+
 .container{
   max-width:1100px;
   margin:40px auto;
-  background:#fff;
+  background:var(--card);
   padding:45px;
   border-radius:18px;
 }
+
+/* ===== HERO WITH BACKDROP ===== */
 .hero{
+  position:relative;
   text-align:center;
-  padding:50px 20px;
-  background:linear-gradient(135deg,#eef4ff,#ffffff);
+  padding:60px 20px;
   border-radius:18px;
+  overflow:hidden;
 }
+
+/* Custom SVG World Map (ultra-light) */
+.hero svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:.08;
+  pointer-events:none;
+}
+
+/* Animated dots */
+.dot{
+  position:absolute;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--dot);
+  animation:pulse 4s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(.7);opacity:.4}
+  50%{transform:scale(1);opacity:.9}
+  100%{transform:scale(.7);opacity:.4}
+}
+
+/* Hero content above backdrop */
+.hero > *{
+  position:relative;
+  z-index:2;
+}
+
 .hero h1{
   font-size:2.4rem;
   margin-bottom:12px;
-  color:var(--dark);
 }
 .hero p{
-  font-size:1.05rem;
-  color:#444;
   max-width:720px;
   margin:0 auto;
+  color:var(--muted);
 }
+
 .search-box{
   margin-top:30px;
   display:flex;
@@ -65,6 +117,7 @@ body{
   gap:12px;
   flex-wrap:wrap;
 }
+
 .search-box input{
   width:100%;
   max-width:460px;
@@ -73,6 +126,7 @@ body{
   border-radius:12px;
   border:1px solid #ccc;
 }
+
 .search-box button{
   padding:15px 26px;
   font-size:1rem;
@@ -83,6 +137,8 @@ body{
   font-weight:600;
   cursor:pointer;
 }
+
+/* Country chips */
 .countries{
   margin-top:22px;
   display:flex;
@@ -91,40 +147,29 @@ body{
   flex-wrap:wrap;
 }
 .countries span{
-  background:#fff;
+  background:var(--card);
   border:1px solid #ddd;
   padding:7px 14px;
   border-radius:22px;
   font-size:.9rem;
+  cursor:pointer;
 }
+.countries span:hover{
+  border-color:var(--primary);
+}
+
 .section{
   margin-top:55px;
 }
-.section h2{
-  color:var(--dark);
-  margin-bottom:10px;
-}
-.section p{
-  max-width:900px;
-}
-.cta{
-  margin-top:18px;
-}
-.cta a{
-  display:inline-block;
-  padding:14px 24px;
-  background:var(--primary);
-  color:#fff;
-  text-decoration:none;
-  border-radius:12px;
-  font-weight:600;
-}
+.section h2{margin-bottom:10px}
+.section p{max-width:900px}
+
 footer{
   margin-top:60px;
   padding-top:25px;
   border-top:1px solid #eee;
   font-size:.9rem;
-  color:#666;
+  color:var(--muted);
   text-align:center;
 }
 </style>
@@ -134,57 +179,53 @@ footer{
 
 <div class="container">
 
-<!-- HERO / SEARCH -->
+<!-- HERO -->
 <div class="hero">
+
+  <!-- Inline SVG World Map -->
+  <svg viewBox="0 0 1000 400" preserveAspectRatio="none">
+    <path d="M80 200 Q200 100 320 180 T560 160 T800 200" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M120 260 Q260 200 380 240 T640 260 T880 280" fill="none" stroke="currentColor" stroke-width="2"/>
+  </svg>
+
+  <!-- Dots (positions approx world locations) -->
+  <div class="dot" id="dot-IN" style="top:55%;left:62%"></div>
+  <div class="dot" id="dot-US" style="top:40%;left:28%"></div>
+  <div class="dot" id="dot-GB" style="top:30%;left:48%"></div>
+  <div class="dot" id="dot-CA" style="top:28%;left:26%"></div>
+  <div class="dot" id="dot-AU" style="top:70%;left:82%"></div>
+
   <h1>🌍 Global Postal Code Finder</h1>
   <p>
-    Instantly search postal codes by city, area or ZIP/PIN.  
-    Supports India, USA, UK, Canada, Australia and many other countries.
+    Instantly search postal codes by city, area or ZIP/PIN.
+    Covers India, USA, UK, Canada, Australia & more.
   </p>
 
   <div class="search-box">
-    <input id="q" placeholder="Enter city, area or postal code (e.g. 560001, New York)">
+    <input id="q" placeholder="Enter city, area or postal code">
     <button onclick="goSearch()">Search</button>
   </div>
 
   <div class="countries">
-    <span>🇮🇳 India PIN</span>
-    <span>🇺🇸 USA ZIP</span>
-    <span>🇬🇧 UK Postcode</span>
-    <span>🇨🇦 Canada</span>
-    <span>🇦🇺 Australia</span>
+    <span data-country="IN">🇮🇳 India</span>
+    <span data-country="US">🇺🇸 USA</span>
+    <span data-country="GB">🇬🇧 UK</span>
+    <span data-country="CA">🇨🇦 Canada</span>
+    <span data-country="AU">🇦🇺 Australia</span>
   </div>
-</div>
 
-<!-- CONTENT -->
-<div class="section">
-<h2>What Is a Postal Code?</h2>
-<p>
-A postal code is a numeric or alphanumeric code assigned to a geographic area to help
-postal services identify delivery locations accurately. Different countries follow
-unique postal code systems based on administrative regions and population density.
-</p>
 </div>
 
 <div class="section">
-<h2>How PIN Codes Work in India</h2>
+<h2>Find Postal Codes Worldwide</h2>
 <p>
-India uses a six-digit Postal Index Number (PIN) system managed by India Post.
-The first digit represents the postal region, followed by sub-region, sorting district,
-and individual post office.
+Postal codes help identify precise delivery locations. Our tool allows you to search
+accurate postal codes by city or area for multiple countries, making address verification
+fast and reliable.
 </p>
 </div>
 
-<div class="section">
-<h2>ZIP Codes, Postcodes & International Systems</h2>
-<p>
-The United States uses five-digit ZIP codes, the UK follows alphanumeric postcodes,
-and countries like Canada, Germany, Japan and Australia use structured postal systems
-to manage domestic and international deliveries efficiently.
-</p>
-</div>
-
-<!-- AD (SAFE PLACEMENT) -->
+<!-- SAFE AD PLACEMENT -->
 <ins class="adsbygoogle"
 style="display:block;margin-top:40px"
 data-ad-client="ca-pub-9595967643816732"
@@ -192,17 +233,6 @@ data-ad-slot="1234567890"
 data-ad-format="auto"
 data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
-<div class="section">
-<h2>Find Postal Codes by City or Area</h2>
-<p>
-Use our free postal code lookup tool to search by city name, locality, or existing postal
-code. This tool helps with online forms, deliveries, address verification and logistics.
-</p>
-<div class="cta">
-  <a href="search.html">🔍 Open Postal Code Search Tool</a>
-</div>
-</div>
 
 <footer>
 © 2026 pincode4u.com · Global Postal Code Lookup
@@ -216,6 +246,19 @@ function goSearch(){
   if(!q) return;
   location.href="search.html?q="+encodeURIComponent(q);
 }
+
+/* Animate dots based on country hover */
+document.querySelectorAll(".countries span").forEach(el=>{
+  el.addEventListener("mouseenter",()=>{
+    const c=el.dataset.country;
+    document.querySelectorAll(".dot").forEach(d=>d.style.opacity=".25");
+    const active=document.getElementById("dot-"+c);
+    if(active) active.style.opacity="1";
+  });
+  el.addEventListener("mouseleave",()=>{
+    document.querySelectorAll(".dot").forEach(d=>d.style.opacity="");
+  });
+});
 </script>
 
 </body>
