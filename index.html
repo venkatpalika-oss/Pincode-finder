@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Global Postal Code Finder – PIN, ZIP & Postcodes by Country</title>
-<meta name="description" content="Find postal codes worldwide. Learn how PIN, ZIP and postcodes work in India, USA, UK, Canada, Australia and more. Search by city or area easily.">
+<title>Global Postal Code Finder | PIN, ZIP & Postcodes by City & Country</title>
+<meta name="description" content="Search postal codes worldwide. Find India PIN codes, US ZIP codes, UK postcodes, Canada, Australia & more by city or area.">
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
@@ -16,64 +16,177 @@ gtag('js', new Date());
 gtag('config', 'G-5644DXJGXX', { anonymize_ip: true });
 </script>
 
-<!-- Google AdSense (ALLOWED HERE) -->
+<!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9595967643816732"
 crossorigin="anonymous"></script>
 
 <style>
-body{font-family:Arial;background:#f4f6f8;margin:0;color:#222}
-.container{max-width:900px;margin:40px auto;background:#fff;padding:30px;border-radius:12px}
-h1,h2{color:#111}
-a.button{display:inline-block;padding:14px 20px;background:#007bff;color:#fff;border-radius:8px;text-decoration:none;font-weight:600}
-.section{margin-top:35px}
+:root{
+  --primary:#0d6efd;
+  --dark:#111;
+  --bg:#f4f6f8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  color:#222;
+  line-height:1.6;
+}
+.container{
+  max-width:1100px;
+  margin:40px auto;
+  background:#fff;
+  padding:45px;
+  border-radius:18px;
+}
+.hero{
+  text-align:center;
+  padding:50px 20px;
+  background:linear-gradient(135deg,#eef4ff,#ffffff);
+  border-radius:18px;
+}
+.hero h1{
+  font-size:2.4rem;
+  margin-bottom:12px;
+  color:var(--dark);
+}
+.hero p{
+  font-size:1.05rem;
+  color:#444;
+  max-width:720px;
+  margin:0 auto;
+}
+.search-box{
+  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.search-box input{
+  width:100%;
+  max-width:460px;
+  padding:15px 18px;
+  font-size:1rem;
+  border-radius:12px;
+  border:1px solid #ccc;
+}
+.search-box button{
+  padding:15px 26px;
+  font-size:1rem;
+  border-radius:12px;
+  border:none;
+  background:var(--primary);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.countries{
+  margin-top:22px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+.countries span{
+  background:#fff;
+  border:1px solid #ddd;
+  padding:7px 14px;
+  border-radius:22px;
+  font-size:.9rem;
+}
+.section{
+  margin-top:55px;
+}
+.section h2{
+  color:var(--dark);
+  margin-bottom:10px;
+}
+.section p{
+  max-width:900px;
+}
+.cta{
+  margin-top:18px;
+}
+.cta a{
+  display:inline-block;
+  padding:14px 24px;
+  background:var(--primary);
+  color:#fff;
+  text-decoration:none;
+  border-radius:12px;
+  font-weight:600;
+}
+footer{
+  margin-top:60px;
+  padding-top:25px;
+  border-top:1px solid #eee;
+  font-size:.9rem;
+  color:#666;
+  text-align:center;
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<h1>🌍 Global Postal Code Finder</h1>
+<!-- HERO / SEARCH -->
+<div class="hero">
+  <h1>🌍 Global Postal Code Finder</h1>
+  <p>
+    Instantly search postal codes by city, area or ZIP/PIN.  
+    Supports India, USA, UK, Canada, Australia and many other countries.
+  </p>
 
-<p>
-Postal codes are an essential part of modern mail delivery systems. Whether you are sending a letter,
-ordering products online, or locating an address, postal codes help identify specific geographic areas
-quickly and accurately. This website helps users understand and find postal codes across multiple
-countries, including India, the United States, the United Kingdom, Canada, Australia, and more.
-</p>
+  <div class="search-box">
+    <input id="q" placeholder="Enter city, area or postal code (e.g. 560001, New York)">
+    <button onclick="goSearch()">Search</button>
+  </div>
 
+  <div class="countries">
+    <span>🇮🇳 India PIN</span>
+    <span>🇺🇸 USA ZIP</span>
+    <span>🇬🇧 UK Postcode</span>
+    <span>🇨🇦 Canada</span>
+    <span>🇦🇺 Australia</span>
+  </div>
+</div>
+
+<!-- CONTENT -->
 <div class="section">
 <h2>What Is a Postal Code?</h2>
 <p>
-A postal code is a series of numbers or letters assigned to a particular geographic area. Different
-countries use different formats. For example, India uses a six-digit PIN code system, while the United
-States uses ZIP codes and the United Kingdom uses alphanumeric postcodes. Postal codes ensure faster
-sorting and delivery of mail and parcels.
+A postal code is a numeric or alphanumeric code assigned to a geographic area to help
+postal services identify delivery locations accurately. Different countries follow
+unique postal code systems based on administrative regions and population density.
 </p>
 </div>
 
 <div class="section">
 <h2>How PIN Codes Work in India</h2>
 <p>
-India uses a six-digit Postal Index Number (PIN) system managed by India Post. The first digit represents
-the region, the second the sub-region, and the remaining digits identify specific districts and post
-offices. Knowing the correct PIN code helps avoid delivery delays and ensures accurate address
-identification.
+India uses a six-digit Postal Index Number (PIN) system managed by India Post.
+The first digit represents the postal region, followed by sub-region, sorting district,
+and individual post office.
 </p>
 </div>
 
 <div class="section">
 <h2>ZIP Codes, Postcodes & International Systems</h2>
 <p>
-In the United States, ZIP codes consist of five digits with an optional four-digit extension. The UK uses
-alphanumeric postcodes that identify very specific delivery routes. Countries like Canada, Australia,
-Germany, and Japan follow their own structured postal code systems to manage national and international
-mail efficiently.
+The United States uses five-digit ZIP codes, the UK follows alphanumeric postcodes,
+and countries like Canada, Germany, Japan and Australia use structured postal systems
+to manage domestic and international deliveries efficiently.
 </p>
 </div>
 
-<!-- ✅ SAFE AD PLACEMENT -->
+<!-- AD (SAFE PLACEMENT) -->
 <ins class="adsbygoogle"
-style="display:block"
+style="display:block;margin-top:40px"
 data-ad-client="ca-pub-9595967643816732"
 data-ad-slot="1234567890"
 data-ad-format="auto"
@@ -83,22 +196,27 @@ data-full-width-responsive="true"></ins>
 <div class="section">
 <h2>Find Postal Codes by City or Area</h2>
 <p>
-You can search for postal codes by entering a city name, area, or existing postal code. Our lookup tool
-supports multiple countries and helps you identify the correct postal code for your location.
+Use our free postal code lookup tool to search by city name, locality, or existing postal
+code. This tool helps with online forms, deliveries, address verification and logistics.
 </p>
-
-<a class="button" href="search.html">🔍 Open Postal Code Search Tool</a>
+<div class="cta">
+  <a href="search.html">🔍 Open Postal Code Search Tool</a>
+</div>
 </div>
 
-<div class="section">
-<h2>Why Accurate Postal Codes Matter</h2>
-<p>
-Using the correct postal code is important for deliveries, online forms, banking verification, and
-location-based services. Incorrect postal codes can cause delays, failed deliveries, and service issues.
-Always verify postal codes before submitting important information.
-</p>
-</div>
+<footer>
+© 2026 pincode4u.com · Global Postal Code Lookup
+</footer>
 
 </div>
+
+<script>
+function goSearch(){
+  const q=document.getElementById("q").value.trim();
+  if(!q) return;
+  location.href="search.html?q="+encodeURIComponent(q);
+}
+</script>
+
 </body>
 </html>
