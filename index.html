@@ -6,15 +6,6 @@
 <title>Global Postal & Credit Score Tools – Pincode4U</title>
 <meta name="description" content="Find postal codes worldwide and check your free credit score in India. Use our postal code search tool and CIBIL score checker easily online.">
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-5644DXJGXX', { anonymize_ip: true });
-</script>
-
 <style>
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -38,22 +29,11 @@ header p { margin:5px 0 0; font-size:16px; }
   position: relative;
   text-align: center;
   padding: 80px 20px;
-  overflow: hidden;
   min-height: 400px;
-  background: linear-gradient(180deg, #e6f0ff 0%, #ffffff 100%);
   border-radius: 16px;
+  background: #e6f0ff url('https://i.ibb.co/7n7p9yC/world-map.png') center center no-repeat;
+  background-size: cover;
 }
-
-.world-map {
-  position: absolute;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  opacity:0.15;
-  pointer-events:none;
-}
-.world-map svg { width:90%; height:auto; }
 
 .country-dots span {
   position: absolute;
@@ -68,17 +48,16 @@ header p { margin:5px 0 0; font-size:16px; }
   50%{transform:scale(1.4);opacity:.9}
   100%{transform:scale(.8);opacity:.4}
 }
-/* Example positions for main countries */
+/* Example positions for main countries (adjust if needed) */
 .india{top:56%; left:63%}
 .usa{top:40%; left:30%}
 .uk{top:35%; left:48%}
 .canada{top:30%; left:28%}
 .australia{top:73%; left:78%}
 
-.hero-content { position: relative; z-index: 1; }
+.hero-content { position: relative; z-index: 1; color:#333; }
 .hero-content h2 { font-size:24px; color:#0a58ca; margin:0 0 12px; }
 .hero-content p { font-size:16px; margin:0 0 20px; color:#555; }
-
 .hero-content .hero-buttons a {
   display:inline-block;
   margin:6px 8px 0 8px;
@@ -114,8 +93,7 @@ footer {
   body{background:#121212;color:#e5e5e5}
   .container{background:#1c1c1c}
   .hero-content p,.card p,.seo-section{color:#cfcfcf}
-  .world-map svg{opacity:0.1; fill:#7db4ff;}
-  .dot{background:#7db4ff}
+  .country-dots span{background:#7db4ff;}
   footer{background:#1c1c1c;color:#ccc;}
 }
 </style>
@@ -131,22 +109,16 @@ footer {
 
   <!-- HERO -->
   <div class="hero">
-    <div class="world-map">
-      <!-- Simple world map SVG -->
-      <svg viewBox="0 0 2000 1001" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#0d6efd" d="M0,500 C500,200 1500,200 2000,500 C1500,800 500,800 0,500 Z"/>
-      </svg>
-      <div class="country-dots">
-        <span class="dot india"></span>
-        <span class="dot usa"></span>
-        <span class="dot uk"></span>
-        <span class="dot canada"></span>
-        <span class="dot australia"></span>
-      </div>
+    <div class="country-dots">
+      <span class="india"></span>
+      <span class="usa"></span>
+      <span class="uk"></span>
+      <span class="canada"></span>
+      <span class="australia"></span>
     </div>
     <div class="hero-content">
       <h2>Find Postal Codes & Check Credit Scores</h2>
-      <p>Use our tools to search India PIN codes, US ZIP codes, UK postcodes and check your free credit score safely online.</p>
+      <p>Search India PIN codes, US ZIP codes, UK postcodes and check your free credit score safely online.</p>
       <div class="hero-buttons">
         <a href="search.html">🔍 Postal Code Search</a>
         <a href="credit-score.html">💳 Free Credit Score</a>
