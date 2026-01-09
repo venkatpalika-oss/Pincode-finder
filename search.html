@@ -7,7 +7,7 @@
 <title>Postal Code Search Tool | Find PIN, ZIP & Postcodes</title>
 <meta name="description" content="Search postal codes by city or area. Supports India PIN codes, US ZIP codes, UK postcodes and more.">
 
-<!-- Google Analytics (ALLOWED) -->
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -17,22 +17,66 @@ gtag('config', 'G-5644DXJGXX', { anonymize_ip: true });
 </script>
 
 <style>
-body{margin:0;font-family:Arial;background:#f4f6f8;color:#222}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:#f4f6f8;
+  color:#222;
+}
 .container{
-max-width:900px;margin:40px auto;background:#fff;
-padding:25px;border-radius:12px
+  max-width:900px;
+  margin:40px auto;
+  background:#fff;
+  padding:30px;
+  border-radius:14px;
 }
-h1{text-align:center}
-.helper{text-align:center;color:#555;font-size:14px}
+h1{text-align:center;margin-bottom:8px}
+.helper{text-align:center;color:#555;font-size:14px;margin-bottom:20px}
+
 select,input,button{
-width:100%;padding:14px;font-size:16px;
-border-radius:8px;margin-top:12px
+  width:100%;
+  padding:14px;
+  font-size:16px;
+  border-radius:10px;
+  margin-top:12px;
+  border:1px solid #ccc;
 }
-button{background:#007bff;color:#fff;border:none;cursor:pointer}
-.card{padding:14px;border-bottom:1px solid #ddd;cursor:pointer}
-.card:hover{background:#eef5ff}
-.error{text-align:center;color:red;margin-top:15px}
-.back{display:block;text-align:center;margin-top:20px}
+button{
+  background:#0d6efd;
+  color:#fff;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+}
+button:disabled{opacity:.6}
+
+#loading{
+  text-align:center;
+  margin-top:15px;
+  color:#555;
+  display:none;
+}
+
+.card{
+  padding:14px;
+  border-bottom:1px solid #eee;
+  cursor:pointer;
+}
+.card:hover{background:#f2f7ff}
+
+.error{
+  text-align:center;
+  color:#d00;
+  margin-top:15px;
+}
+
+.back{
+  display:block;
+  text-align:center;
+  margin-top:25px;
+  text-decoration:none;
+  color:#0d6efd;
+}
 </style>
 </head>
 
@@ -40,9 +84,7 @@ button{background:#007bff;color:#fff;border:none;cursor:pointer}
 <div class="container">
 
 <h1>🔍 Postal Code Search</h1>
-<p class="helper">
-Search by city name or enter a postal code to find location details.
-</p>
+<p class="helper">Search by city name, area, or postal code</p>
 
 <select id="country">
 <option value="IN">🇮🇳 India</option>
@@ -56,8 +98,9 @@ Search by city name or enter a postal code to find location details.
 </select>
 
 <input id="q" placeholder="Enter city or postal code">
-<button onclick="search()">Search</button>
+<button id="btn" onclick="search()">Search</button>
 
+<div id="loading">🔄 Searching...</div>
 <div id="result"></div>
 <div id="error" class="error"></div>
 
@@ -66,64 +109,90 @@ Search by city name or enter a postal code to find location details.
 </div>
 
 <script>
-const OPENCAGE_KEY="YOUR_OPENCAGE_KEY_HERE";
+const OPENCAGE_KEY = "c5d8ded23d19451a95b3d326d9a28d03";
+
+const q = document.getElementById("q");
+const result = document.getElementById("result");
+const error = document.getElementById("error");
+const loading = document.getElementById("loading");
+const btn = document.getElementById("btn");
+const country = document.getElementById("country");
+
+/* Auto-search when coming from index.html */
+const params = new URLSearchParams(location.search);
+if(params.get("q")){
+  q.value = params.get("q");
+  setTimeout(search, 300);
+}
+
+/* Enter key triggers search */
+q.addEventListener("keypress",e=>{
+  if(e.key==="Enter") search();
+});
 
 async function search(){
-const qv=q.value.trim();
-const c=country.value;
-result.innerHTML=""; error.textContent="";
-if(!qv) return;
+  const qv = q.value.trim();
+  const c = country.value;
+  if(!qv) return;
 
-gtag('event','search',{search_term:qv,country:c});
+  result.innerHTML="";
+  error.textContent="";
+  loading.style.display="block";
+  btn.disabled=true;
 
-try{
-if(c==="IN"){
-const url=/^\d{6}$/.test(qv)
-?`https://api.postalpincode.in/pincode/${qv}`
-:`https://api.postalpincode.in/postoffice/${encodeURIComponent(qv)}`;
+  gtag('event','search',{search_term:qv,country:c});
 
-const d=await (await fetch(url)).json();
-if(d[0].Status!=="Success") throw "";
+  try{
+    if(c==="IN"){
+      const url = /^\d{6}$/.test(qv)
+        ? `https://api.postalpincode.in/pincode/${qv}`
+        : `https://api.postalpincode.in/postoffice/${encodeURIComponent(qv)}`;
 
-d[0].PostOffice.forEach(o=>{
-result.innerHTML+=`
-<div class="card" onclick="goIN(
-'${o.Name}','${o.Pincode}','${o.District}','${o.State}'
-)">
-🇮🇳 <strong>${o.Name}</strong> – ${o.Pincode}<br>
-${o.District}, ${o.State}
-</div>`;
-});
-return;
-}
+      const d = await (await fetch(url)).json();
+      if(d[0].Status!=="Success") throw "";
 
-const geo=await (await fetch(
-`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(qv)}&countrycode=${c.toLowerCase()}&limit=3&key=${OPENCAGE_KEY}`
-)).json();
+      d[0].PostOffice.forEach(o=>{
+        result.innerHTML += `
+        <div class="card" onclick="goIN(
+          '${o.Name}','${o.Pincode}','${o.District}','${o.State}'
+        )">
+          🇮🇳 <strong>${o.Name}</strong> – ${o.Pincode}<br>
+          ${o.District}, ${o.State}
+        </div>`;
+      });
+    } else {
+      const geo = await (await fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(qv)}&countrycode=${c.toLowerCase()}&limit=3&key=${OPENCAGE_KEY}`
+      )).json();
 
-geo.results.forEach(r=>{
-const x=r.components;
-result.innerHTML+=`
-<div class="card" onclick="goINT(
-'${c}','${x.postcode||""}',
-'${x.city||x.town||x.village||qv}',
-'${x.state||""}'
-)">
-🌍 <strong>${x.postcode||"Postal code not available"}</strong><br>
-${x.city||x.town||x.village||qv}, ${x.state||""}
-</div>`;
-});
+      if(!geo.results.length) throw "";
 
-}catch{
-error.textContent="No results found.";
-}
+      geo.results.forEach(r=>{
+        const x = r.components;
+        result.innerHTML += `
+        <div class="card" onclick="goINT(
+          '${c}','${x.postcode||""}',
+          '${x.city||x.town||x.village||qv}',
+          '${x.state||""}'
+        )">
+          🌍 <strong>${x.postcode || "Postal code not available"}</strong><br>
+          ${x.city||x.town||x.village||qv}, ${x.state||""}
+        </div>`;
+      });
+    }
+  } catch {
+    error.textContent="No results found. Try another search.";
+  }
+
+  loading.style.display="none";
+  btn.disabled=false;
 }
 
 function goIN(n,p,d,s){
-location.href=`detail.html?country=IN&name=${encodeURIComponent(n)}&pin=${p}&district=${encodeURIComponent(d)}&state=${encodeURIComponent(s)}`;
+  location.href=`detail.html?country=IN&name=${encodeURIComponent(n)}&pin=${p}&district=${encodeURIComponent(d)}&state=${encodeURIComponent(s)}`;
 }
 function goINT(c,p,pl,s){
-location.href=`detail.html?country=${c}&pin=${p}&place=${encodeURIComponent(pl)}&state=${encodeURIComponent(s)}`;
+  location.href=`detail.html?country=${c}&pin=${p}&place=${encodeURIComponent(pl)}&state=${encodeURIComponent(s)}`;
 }
 </script>
 
