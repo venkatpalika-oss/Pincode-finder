@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Global Postal Code Finder – PIN, ZIP & Postcodes by Country</title>
-<meta name="description" content="Pincode4U helps you find postal codes worldwide including India PIN codes, US ZIP codes, UK postcodes, Canada, Australia and more. Search by city, area or postal code instantly.">
+<meta name="description" content="Find postal codes worldwide including India PIN codes, US ZIP codes, UK postcodes, Canada, Australia and more. Search by city, area or postal code instantly.">
+<link rel="canonical" href="https://www.pincode4u.com/">
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
@@ -62,43 +63,28 @@ body{
   fill:#0d6efd;
 }
 
-/* COUNTRY DOTS */
-.country-dots{
-  position:absolute;
-  inset:0;
-}
-
+/* DOTS */
+.country-dots{position:absolute;inset:0}
 .dot{
   position:absolute;
-  width:10px;
-  height:10px;
-  border-radius:50%;
+  width:10px;height:10px;border-radius:50%;
   background:#0d6efd;
   opacity:.7;
   animation:pulseDot 4s infinite;
 }
-
 @keyframes pulseDot{
   0%{transform:scale(.8);opacity:.4}
   50%{transform:scale(1.4);opacity:.9}
   100%{transform:scale(.8);opacity:.4}
 }
-
-/* Approximate positions */
-.india{top:56%;left:63%;animation-delay:0s}
-.usa{top:40%;left:30%;animation-delay:1s}
-.uk{top:35%;left:48%;animation-delay:2s}
-.canada{top:30%;left:28%;animation-delay:3s}
-.australia{top:73%;left:78%;animation-delay:4s}
+.india{top:56%;left:63%}
+.usa{top:40%;left:30%}
+.uk{top:35%;left:48%}
+.canada{top:30%;left:28%}
+.australia{top:73%;left:78%}
 
 /* HERO CONTENT */
-.hero-content{
-  position:relative;
-  z-index:1;
-}
-
-h1{margin-bottom:10px}
-
+.hero-content{position:relative;z-index:1}
 .hero-desc{
   max-width:740px;
   margin:14px auto 0;
@@ -106,7 +92,6 @@ h1{margin-bottom:10px}
   line-height:1.6;
   color:#555;
 }
-
 a.button{
   display:inline-block;
   margin-top:26px;
@@ -118,34 +103,26 @@ a.button{
   font-weight:600;
 }
 
-/* SEO BOX */
-.seo-box{
+/* SEO SECTIONS */
+.seo-section{
   max-width:900px;
   margin:50px auto 0;
-  padding:18px 22px;
-  border-radius:12px;
-  background:#f8f9fb;
   font-size:15px;
   line-height:1.7;
   color:#555;
 }
+.seo-section h2{margin-bottom:12px}
+.seo-section h3{margin-top:18px}
+.seo-section ul{padding-left:18px}
 
-.seo-box summary{
-  cursor:pointer;
-  font-weight:600;
-  font-size:16px;
-  color:#0d6efd;
-}
-
-.seo-box p{margin-top:12px}
+/* FAQ */
+.faq h3{margin-bottom:6px}
 
 /* DARK MODE */
 @media (prefers-color-scheme: dark){
   body{background:#121212;color:#e5e5e5}
   .container{background:#1c1c1c}
-  .hero-desc{color:#cfcfcf}
-  .seo-box{background:#1e1e1e;color:#ccc}
-  .seo-box summary{color:#7db4ff}
+  .hero-desc,.seo-section{color:#cfcfcf}
   .world-map svg{fill:#7db4ff;opacity:0.12}
   .dot{background:#7db4ff}
 }
@@ -156,9 +133,8 @@ a.button{
 
 <div class="container">
 
+  <!-- HERO -->
   <div class="hero">
-
-    <!-- WORLD MAP -->
     <div class="world-map">
       <svg viewBox="0 0 2000 1001" aria-hidden="true">
         <path d="M180 380l120-40 160 20 90-40 140 10 120 60 100-30 160 20 120 80-60 60-120 20-140-20-120 30-160-10-140 30-100-30-140-40z"/>
@@ -167,55 +143,110 @@ a.button{
         <path d="M1300 560l120 40 160-10 140 60-80 50-180 10-160-40z"/>
       </svg>
 
-      <!-- ANIMATED COUNTRY DOTS -->
       <div class="country-dots">
-        <span class="dot india" title="India"></span>
-        <span class="dot usa" title="United States"></span>
-        <span class="dot uk" title="United Kingdom"></span>
-        <span class="dot canada" title="Canada"></span>
-        <span class="dot australia" title="Australia"></span>
+        <span class="dot india"></span>
+        <span class="dot usa"></span>
+        <span class="dot uk"></span>
+        <span class="dot canada"></span>
+        <span class="dot australia"></span>
       </div>
     </div>
 
-    <!-- HERO CONTENT -->
     <div class="hero-content">
-      <h1>🌍 Global Postal Code Finder</h1>
-
+      <h1>Global Postal Code Finder</h1>
       <p class="hero-desc">
         Search and understand postal codes worldwide.
         Find <strong>India PIN codes</strong>, <strong>US ZIP codes</strong>,
         <strong>UK postcodes</strong> and more by city, area, or postal code.
       </p>
-
-      <a class="button" href="search.html">🔍 Open Postal Code Search Tool</a>
+      <a class="button" href="search.html" role="button">🔍 Open Postal Code Search Tool</a>
     </div>
-
   </div>
 
-  <!-- EXPANDABLE SEO CONTENT -->
-  <details class="seo-box">
-    <summary>What is a postal code and how does it work?</summary>
-
+  <!-- SECTION 1 -->
+  <section class="seo-section">
+    <h2>How Our Global Postal Code Finder Works</h2>
     <p>
-      Postal codes are location-based numeric or alphanumeric identifiers used by postal services
-      to sort and deliver mail efficiently. India uses a 6-digit PIN code system, the United States
-      uses ZIP codes, and the United Kingdom uses alphanumeric postcodes.
+      Our postal code finder allows you to search postal codes worldwide using
+      a city name, area, or an existing postal code. Simply choose your country
+      and enter the location to get instant results.
+    </p>
+    <p>
+      The tool supports multiple postal systems including India PIN codes,
+      US ZIP codes, UK postcodes, Canadian postal codes, and more.
+    </p>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="seo-section">
+    <h2>Postal Code Systems Around the World</h2>
+
+    <h3>India – PIN Codes</h3>
+    <p>
+      India uses a 6-digit Postal Index Number (PIN) system where each digit
+      represents a specific region, sub-region, and delivery post office.
     </p>
 
+    <h3>United States – ZIP Codes</h3>
     <p>
-      Pincode4U helps you search postal codes worldwide by city, area, or postal code.
+      US ZIP codes consist of five digits, with optional ZIP+4 extensions
+      for identifying specific delivery routes or buildings.
     </p>
-  </details>
 
-  <!-- SAFE AD -->
-  <div style="margin-top:40px">
+    <h3>United Kingdom – Postcodes</h3>
+    <p>
+      UK postcodes are alphanumeric and provide highly precise address
+      identification, often down to a small group of houses.
+    </p>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="seo-section">
+    <h2>Why Use a Postal Code Finder?</h2>
+    <ul>
+      <li>Accurate address entry for online shopping</li>
+      <li>Courier and logistics planning</li>
+      <li>Government and official form submissions</li>
+      <li>Business location verification</li>
+      <li>Delivery and service availability checks</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 4 (FAQ) -->
+  <section class="seo-section faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <h3>What is a postal code?</h3>
+    <p>
+      A postal code is a numeric or alphanumeric identifier used by postal
+      services to organize and deliver mail efficiently.
+    </p>
+
+    <h3>Can I search postal codes by city or area?</h3>
+    <p>
+      Yes. You can search using a city name, locality, district, or an existing
+      postal code to find accurate results.
+    </p>
+
+    <h3>Is this postal code search tool free?</h3>
+    <p>
+      Yes, Pincode4U is completely free for personal and educational use.
+    </p>
+  </section>
+
+  <!-- AD -->
+  <div style="margin-top:50px">
     <ins class="adsbygoogle"
       style="display:block"
       data-ad-client="ca-pub-9595967643816732"
       data-ad-slot="1234567890"
       data-ad-format="auto"
       data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <script>
+      requestIdleCallback(()=> {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      });
+    </script>
   </div>
 
 </div>
