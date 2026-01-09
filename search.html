@@ -73,15 +73,19 @@ button:disabled{opacity:.6}
 .back{
   display:block;
   text-align:center;
-  margin-top:25px;
+  margin:25px 0;
   text-decoration:none;
   color:#0d6efd;
+  font-weight:600;
 }
 </style>
 </head>
 
 <body>
 <div class="container">
+
+<!-- BACK TO HOME -->
+<a class="back" href="index.html">🏠 Back to Home</a>
 
 <h1>🔍 Postal Code Search</h1>
 <p class="helper">Search by city name, area, or postal code</p>
@@ -104,13 +108,13 @@ button:disabled{opacity:.6}
 <div id="result"></div>
 <div id="error" class="error"></div>
 
-<a class="back" href="index.html">← Back to Home</a>
+<!-- BACK TO HOME -->
+<a class="back" href="index.html">🏠 Back to Home</a>
 
 </div>
 
 <script>
 const OPENCAGE_KEY = "c5d8ded23d19451a95b3d326d9a28d03";
-
 const q = document.getElementById("q");
 const result = document.getElementById("result");
 const error = document.getElementById("error");
