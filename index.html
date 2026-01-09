@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Global Postal Code Finder | PIN, ZIP & Postcodes by City & Country</title>
-<meta name="description" content="Search postal codes worldwide. Find India PIN codes, US ZIP codes, UK postcodes, Canada, Australia & more by city or area.">
+<title>Global Postal Code Finder – PIN, ZIP & Postcodes by Country</title>
+<meta name="description" content="Pincode4U helps you find postal codes worldwide including India PIN codes, US ZIP codes, UK postcodes, Canada, Australia and more. Search by city, area or postal code instantly.">
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5644DXJGXX"></script>
@@ -21,156 +21,98 @@ gtag('config', 'G-5644DXJGXX', { anonymize_ip: true });
 crossorigin="anonymous"></script>
 
 <style>
-:root{
-  --primary:#0d6efd;
-  --bg:#f4f6f8;
-  --card:#ffffff;
-  --text:#222;
-  --muted:#555;
-  --dot:rgba(13,110,253,.25);
-}
-
-/* Dark mode */
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0b1220;
-    --card:#0f172a;
-    --text:#e5e7eb;
-    --muted:#9ca3af;
-    --dot:rgba(96,165,250,.35);
-  }
-}
-
-*{box-sizing:border-box}
-
 body{
+  font-family:Arial, sans-serif;
+  background:#f4f6f8;
   margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.6;
+  color:#222;
 }
 
 .container{
-  max-width:1100px;
+  max-width:900px;
   margin:40px auto;
-  background:var(--card);
-  padding:45px;
-  border-radius:18px;
+  background:#fff;
+  padding:30px;
+  border-radius:14px;
 }
 
-/* ===== HERO WITH BACKDROP ===== */
+/* HERO */
 .hero{
-  position:relative;
   text-align:center;
-  padding:60px 20px;
-  border-radius:18px;
+  position:relative;
   overflow:hidden;
+  padding:40px 20px;
 }
 
-/* Custom SVG World Map (ultra-light) */
-.hero svg{
+.hero::before{
+  content:"";
   position:absolute;
   inset:0;
-  width:100%;
-  height:100%;
-  opacity:.08;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(13,110,253,.10) 2px, transparent 2px),
+    radial-gradient(circle at 80% 60%, rgba(13,110,253,.10) 2px, transparent 2px),
+    radial-gradient(circle at 55% 75%, rgba(13,110,253,.10) 2px, transparent 2px);
+  background-size:120px 120px;
+  opacity:.5;
   pointer-events:none;
 }
 
-/* Animated dots */
-.dot{
-  position:absolute;
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:var(--dot);
-  animation:pulse 4s infinite;
-}
+.hero > *{position:relative;z-index:1}
 
-@keyframes pulse{
-  0%{transform:scale(.7);opacity:.4}
-  50%{transform:scale(1);opacity:.9}
-  100%{transform:scale(.7);opacity:.4}
-}
+h1{margin-bottom:10px}
 
-/* Hero content above backdrop */
-.hero > *{
-  position:relative;
-  z-index:2;
-}
-
-.hero h1{
-  font-size:2.4rem;
-  margin-bottom:12px;
-}
-.hero p{
+.hero-desc{
   max-width:720px;
-  margin:0 auto;
-  color:var(--muted);
+  margin:14px auto 0;
+  font-size:17px;
+  line-height:1.6;
+  color:#555;
 }
 
-.search-box{
-  margin-top:30px;
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.search-box input{
-  width:100%;
-  max-width:460px;
-  padding:15px 18px;
-  font-size:1rem;
-  border-radius:12px;
-  border:1px solid #ccc;
-}
-
-.search-box button{
-  padding:15px 26px;
-  font-size:1rem;
-  border-radius:12px;
-  border:none;
-  background:var(--primary);
+a.button{
+  display:inline-block;
+  margin-top:25px;
+  padding:14px 22px;
+  background:#007bff;
   color:#fff;
+  border-radius:10px;
+  text-decoration:none;
   font-weight:600;
+}
+
+.section{margin-top:40px}
+
+/* SEO EXPANDABLE BOX */
+.seo-box{
+  max-width:900px;
+  margin:50px auto 0;
+  padding:18px 22px;
+  border-radius:12px;
+  background:#f8f9fb;
+  font-size:15px;
+  line-height:1.7;
+  color:#555;
+}
+
+.seo-box summary{
   cursor:pointer;
+  font-weight:600;
+  font-size:16px;
+  color:#0d6efd;
+  outline:none;
 }
 
-/* Country chips */
-.countries{
-  margin-top:22px;
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-.countries span{
-  background:var(--card);
-  border:1px solid #ddd;
-  padding:7px 14px;
-  border-radius:22px;
-  font-size:.9rem;
-  cursor:pointer;
-}
-.countries span:hover{
-  border-color:var(--primary);
-}
+.seo-box summary::marker{color:#0d6efd}
 
-.section{
-  margin-top:55px;
-}
-.section h2{margin-bottom:10px}
-.section p{max-width:900px}
+.seo-box p{margin-top:12px}
 
-footer{
-  margin-top:60px;
-  padding-top:25px;
-  border-top:1px solid #eee;
-  font-size:.9rem;
-  color:var(--muted);
-  text-align:center;
+/* DARK MODE */
+@media (prefers-color-scheme: dark){
+  body{background:#121212;color:#e5e5e5}
+  .container{background:#1c1c1c}
+  .hero-desc{color:#cfcfcf}
+  .seo-box{background:#1e1e1e;color:#ccc}
+  .seo-box summary{color:#7db4ff}
 }
 </style>
 </head>
@@ -179,87 +121,53 @@ footer{
 
 <div class="container">
 
-<!-- HERO -->
-<div class="hero">
+  <div class="hero">
+    <h1>🌍 Global Postal Code Finder</h1>
 
-  <!-- Inline SVG World Map -->
-  <svg viewBox="0 0 1000 400" preserveAspectRatio="none">
-    <path d="M80 200 Q200 100 320 180 T560 160 T800 200" fill="none" stroke="currentColor" stroke-width="2"/>
-    <path d="M120 260 Q260 200 380 240 T640 260 T880 280" fill="none" stroke="currentColor" stroke-width="2"/>
-  </svg>
+    <p class="hero-desc">
+      Search and understand postal codes worldwide.
+      Find <strong>India PIN codes</strong>, <strong>US ZIP codes</strong>,
+      <strong>UK postcodes</strong> and more by city, area, or postal code.
+    </p>
 
-  <!-- Dots (positions approx world locations) -->
-  <div class="dot" id="dot-IN" style="top:55%;left:62%"></div>
-  <div class="dot" id="dot-US" style="top:40%;left:28%"></div>
-  <div class="dot" id="dot-GB" style="top:30%;left:48%"></div>
-  <div class="dot" id="dot-CA" style="top:28%;left:26%"></div>
-  <div class="dot" id="dot-AU" style="top:70%;left:82%"></div>
-
-  <h1>🌍 Global Postal Code Finder</h1>
-  <p>
-    Instantly search postal codes by city, area or ZIP/PIN.
-    Covers India, USA, UK, Canada, Australia & more.
-  </p>
-
-  <div class="search-box">
-    <input id="q" placeholder="Enter city, area or postal code">
-    <button onclick="goSearch()">Search</button>
+    <a class="button" href="search.html">🔍 Open Postal Code Search Tool</a>
   </div>
 
-  <div class="countries">
-    <span data-country="IN">🇮🇳 India</span>
-    <span data-country="US">🇺🇸 USA</span>
-    <span data-country="GB">🇬🇧 UK</span>
-    <span data-country="CA">🇨🇦 Canada</span>
-    <span data-country="AU">🇦🇺 Australia</span>
+  <!-- EXPANDABLE SEO CONTENT -->
+  <details class="seo-box">
+    <summary>What is a postal code and how does it work?</summary>
+
+    <p>
+      Postal codes are location-based numeric or alphanumeric identifiers used by postal services
+      to sort and deliver mail efficiently. Different countries follow different systems.
+      <strong>India uses a 6-digit PIN code</strong>, the <strong>United States uses ZIP codes</strong>,
+      and the <strong>United Kingdom uses alphanumeric postcodes</strong>.
+    </p>
+
+    <p>
+      Pincode4U helps you find and understand postal codes worldwide. You can search by
+      city, area, or postal code to get accurate location details for countries such as
+      India, USA, UK, Canada, Australia, Germany, France, and Japan.
+    </p>
+
+    <p>
+      Using the correct postal code is essential for online deliveries, address verification,
+      banking services, government forms, and location-based services.
+    </p>
+  </details>
+
+  <!-- SAFE AD PLACEMENT -->
+  <div class="section">
+    <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-9595967643816732"
+      data-ad-slot="1234567890"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
 
 </div>
-
-<div class="section">
-<h2>Find Postal Codes Worldwide</h2>
-<p>
-Postal codes help identify precise delivery locations. Our tool allows you to search
-accurate postal codes by city or area for multiple countries, making address verification
-fast and reliable.
-</p>
-</div>
-
-<!-- SAFE AD PLACEMENT -->
-<ins class="adsbygoogle"
-style="display:block;margin-top:40px"
-data-ad-client="ca-pub-9595967643816732"
-data-ad-slot="1234567890"
-data-ad-format="auto"
-data-full-width-responsive="true"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
-<footer>
-© 2026 pincode4u.com · Global Postal Code Lookup
-</footer>
-
-</div>
-
-<script>
-function goSearch(){
-  const q=document.getElementById("q").value.trim();
-  if(!q) return;
-  location.href="search.html?q="+encodeURIComponent(q);
-}
-
-/* Animate dots based on country hover */
-document.querySelectorAll(".countries span").forEach(el=>{
-  el.addEventListener("mouseenter",()=>{
-    const c=el.dataset.country;
-    document.querySelectorAll(".dot").forEach(d=>d.style.opacity=".25");
-    const active=document.getElementById("dot-"+c);
-    if(active) active.style.opacity="1";
-  });
-  el.addEventListener("mouseleave",()=>{
-    document.querySelectorAll(".dot").forEach(d=>d.style.opacity="");
-  });
-});
-</script>
 
 </body>
 </html>
