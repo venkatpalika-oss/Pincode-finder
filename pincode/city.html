@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>City Pincode – Pincode4U</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f7f9fc;
+}
+
+header{
+background:#0a58ca;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Pincode4U</h1>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2 id="cityTitle"></h2>
+
+<p id="cityDescription"></p>
+
+</div>
+
+<div class="card">
+
+<h3>Available Pincodes</h3>
+
+<ul id="pincodeList"></ul>
+
+</div>
+
+</div>
+
+<script>
+
+const path = window.location.pathname;
+
+const city = path.split("/").pop();
+
+document.getElementById("cityTitle").innerText =
+city + " Pincode";
+
+document.getElementById("cityDescription").innerText =
+"Find all pincodes for " + city + " city.";
+
+fetch("../locations.json")
+.then(res => res.json())
+.then(data => {
+
+let list = document.getElementById("pincodeList");
+
+Object.keys(data).forEach(pincode => {
+
+let item = data[pincode];
+
+if(item.city.toLowerCase().includes(city.toLowerCase())){
+
+let li = document.createElement("li");
+
+li.innerHTML =
+pincode + " - " + item.city + ", " + item.state;
+
+list.appendChild(li);
+
+}
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

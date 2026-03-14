@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>City Pincode Directory – Pincode4U</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f7f9fc;
+}
+
+header{
+background:#0a58ca;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+a{
+display:block;
+margin-bottom:8px;
+text-decoration:none;
+color:#0a58ca;
+font-weight:600;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Pincode4U City Directory</h1>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Browse Cities</h2>
+
+<div id="cityList"></div>
+
+</div>
+
+</div>
+
+<script>
+
+fetch("../locations.json")
+.then(res => res.json())
+.then(data => {
+
+let cities = new Set();
+
+Object.keys(data).forEach(pincode => {
+
+let item = data[pincode];
+
+if(item.city){
+
+cities.add(item.city);
+
+}
+
+});
+
+let container = document.getElementById("cityList");
+
+cities.forEach(city => {
+
+let a = document.createElement("a");
+
+a.href = city.toLowerCase().replace(/\s+/g,"-") + ".html";
+
+a.innerText = city + " Pincode";
+
+container.appendChild(a);
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

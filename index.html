@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Global Postal & Credit Score Tools – Pincode4U</title>
-<meta name="description" content="Find postal codes worldwide and check your free credit score in India. Use our postal code search tool and CIBIL score checker easily online.">
+
+<title>Global Postal Code Finder & Credit Score Tool – Pincode4U</title>
+
+<meta name="description" content="Find postal codes worldwide including India PIN codes, US ZIP codes and UK postcodes. Use our free postal code finder and check your credit score safely online.">
+
+<meta name="keywords" content="pincode finder, postal code search, zip code finder, india pincode, postcode finder, postal code by city">
+
+<meta name="robots" content="index, follow">
 
 <style>
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f7f9fc;
@@ -14,12 +22,14 @@ body {
   padding: 0;
   color: #333;
 }
+
 header {
   background: #0a58ca;
   color: #fff;
   padding: 25px 15px;
   text-align: center;
 }
+
 header h1 { margin:0; font-size:28px; }
 header p { margin:5px 0 0; font-size:16px; }
 
@@ -37,18 +47,20 @@ header p { margin:5px 0 0; font-size:16px; }
 
 .country-dots span {
   position: absolute;
-  width:12px; height:12px;
+  width:12px;
+  height:12px;
   border-radius:50%;
   background:#0a58ca;
   opacity:.8;
   animation:pulseDot 4s infinite;
 }
+
 @keyframes pulseDot{
   0%{transform:scale(.8);opacity:.4}
   50%{transform:scale(1.4);opacity:.9}
   100%{transform:scale(.8);opacity:.4}
 }
-/* Example positions for main countries (adjust if needed) */
+
 .india{top:56%; left:63%}
 .usa{top:40%; left:30%}
 .uk{top:35%; left:48%}
@@ -56,9 +68,20 @@ header p { margin:5px 0 0; font-size:16px; }
 .australia{top:73%; left:78%}
 
 .hero-content { position: relative; z-index: 1; color:#333; }
-.hero-content h2 { font-size:24px; color:#0a58ca; margin:0 0 12px; }
-.hero-content p { font-size:16px; margin:0 0 20px; color:#555; }
-.hero-content .hero-buttons a {
+
+.hero-content h2 {
+  font-size:24px;
+  color:#0a58ca;
+  margin:0 0 12px;
+}
+
+.hero-content p {
+  font-size:16px;
+  margin:0 0 20px;
+  color:#555;
+}
+
+.hero-buttons a {
   display:inline-block;
   margin:6px 8px 0 8px;
   padding:14px 22px;
@@ -69,7 +92,10 @@ header p { margin:5px 0 0; font-size:16px; }
   font-weight:600;
   transition:0.3s;
 }
-.hero-content .hero-buttons a:hover { opacity:0.9; }
+
+.hero-buttons a:hover {
+  opacity:0.9;
+}
 
 .card {
   background:#fff;
@@ -78,85 +104,300 @@ header p { margin:5px 0 0; font-size:16px; }
   border-radius:8px;
   box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
+
 h2 { color:#0a58ca; margin-top:0; }
+
 ul, ol { padding-left:20px; }
+
 footer {
   text-align:center;
   font-size:14px;
   padding:15px;
   background:#eef2f7;
 }
+
 .disclaimer { font-size:13px; color:#666; }
 
-/* DARK MODE */
-@media (prefers-color-scheme: dark){
-  body{background:#121212;color:#e5e5e5}
-  .container{background:#1c1c1c}
-  .hero-content p,.card p,.seo-section{color:#cfcfcf}
-  .country-dots span{background:#7db4ff;}
-  footer{background:#1c1c1c;color:#ccc;}
+.trending a{
+  text-decoration:none;
+  color:#0a58ca;
+  font-weight:600;
 }
+
+.trending li{
+  margin-bottom:8px;
+}
+
+.city-directory{
+  columns:3;
+}
+
+.city-directory li{
+  margin-bottom:8px;
+}
+
+/* DARK MODE */
+
+@media (prefers-color-scheme: dark){
+
+body{
+background:#121212;
+color:#e5e5e5
+}
+
+.container{
+background:#1c1c1c
+}
+
+.hero-content p,.card p{
+color:#cfcfcf
+}
+
+.country-dots span{
+background:#7db4ff;
+}
+
+footer{
+background:#1c1c1c;
+color:#ccc;
+}
+
+}
+
 </style>
+
 </head>
+
 <body>
 
 <header>
-  <h1>Pincode4U</h1>
-  <p>Postal Code Finder & Free Credit Score Tools</p>
+
+<h1>Pincode4U</h1>
+<p>Postal Code Finder & Free Credit Score Tools</p>
+
 </header>
 
 <div class="container">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="country-dots">
-      <span class="india"></span>
-      <span class="usa"></span>
-      <span class="uk"></span>
-      <span class="canada"></span>
-      <span class="australia"></span>
-    </div>
-    <div class="hero-content">
-      <h2>Find Postal Codes & Check Credit Scores</h2>
-      <p>Search India PIN codes, US ZIP codes, UK postcodes and check your free credit score safely online.</p>
-      <div class="hero-buttons">
-        <a href="search.html">🔍 Postal Code Search</a>
-        <a href="credit-score.html">💳 Free Credit Score</a>
-      </div>
-    </div>
-  </div>
+<!-- HERO -->
 
-  <!-- SECTION 1 -->
-  <div class="card">
-    <h2>How Our Postal Code Finder Works</h2>
-    <p>Search worldwide postal codes by city, area, or code. Simply select the country and enter your query to get instant results.</p>
-  </div>
+<div class="hero">
 
-  <!-- SECTION 2 -->
-  <div class="card">
-    <h2>Why Use Our Tools?</h2>
-    <ul>
-      <li>Accurate address entry for shopping & logistics</li>
-      <li>Check credit score safely in minutes</li>
-      <li>Free & easy to use</li>
-      <li>RBI-regulated and trusted sources</li>
-    </ul>
-  </div>
+<div class="country-dots">
 
-  <!-- SECTION 3 -->
-  <div class="card faq">
-    <h2>Frequently Asked Questions</h2>
-    <h3>Can I search postal codes worldwide?</h3>
-    <p>Yes, our tool supports India, US, UK, Canada, Australia and many more countries.</p>
-    <h3>Is the credit score tool free?</h3>
-    <p>Yes, it is completely free and safe. We do not store personal data.</p>
-  </div>
+<span class="india"></span>
+<span class="usa"></span>
+<span class="uk"></span>
+<span class="canada"></span>
+<span class="australia"></span>
+
+</div>
+
+<div class="hero-content">
+
+<h2>Find Postal Codes & Check Credit Scores</h2>
+
+<p>Search India PIN codes, US ZIP codes, UK postcodes and check your free credit score safely online.</p>
+
+<div class="hero-buttons">
+
+<a href="search.html">🔍 Postal Code Search</a>
+
+<a href="credit-score.html">💳 Free Credit Score</a>
+
+<a href="#" onclick="getLocation()">📍 Pincode of My Location</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- TRENDING PINCODES -->
+
+<div class="card trending">
+
+<h2>Trending Pincode Searches</h2>
+
+<ul>
+
+<li><a href="search.html?q=Delhi">Delhi Pincode</a></li>
+
+<li><a href="search.html?q=Mumbai">Mumbai Pincode</a></li>
+
+<li><a href="search.html?q=Bangalore">Bangalore Pincode</a></li>
+
+<li><a href="search.html?q=Dubai">Dubai Postal Code</a></li>
+
+<li><a href="search.html?q=London">London Postcode</a></li>
+
+</ul>
+
+</div>
+
+<!-- COUNTRY DIRECTORY -->
+
+<div class="card">
+
+<h2>Browse Postal Codes by Country</h2>
+
+<ul>
+
+<li><a href="india-pincode.html">India Pincode Directory</a></li>
+
+<li><a href="search.html?q=USA">USA ZIP Codes</a></li>
+
+<li><a href="search.html?q=UK">UK Postcodes</a></li>
+
+<li><a href="search.html?q=Canada">Canada Postal Codes</a></li>
+
+<li><a href="search.html?q=Australia">Australia Postcodes</a></li>
+
+</ul>
+
+</div>
+
+<!-- HOW IT WORKS -->
+
+<div class="card">
+
+<h2>How Our Postal Code Finder Works</h2>
+
+<p>
+
+Search worldwide postal codes by city, area, or code.  
+Simply select the country and enter your query to get instant results.
+
+</p>
+
+</div>
+
+<!-- WHY USE -->
+
+<div class="card">
+
+<h2>Why Use Our Tools?</h2>
+
+<ul>
+
+<li>Accurate address entry for shopping & logistics</li>
+
+<li>Check credit score safely in minutes</li>
+
+<li>Free & easy to use</li>
+
+<li>RBI-regulated and trusted sources</li>
+
+</ul>
+
+</div>
+
+<!-- BLOG SECTION -->
+
+<div class="card">
+
+<h2>Postal Code Guides</h2>
+
+<ul>
+
+<li><a href="blog/what-is-pincode.html">What is a Pincode?</a></li>
+
+<li><a href="blog/zip-code-vs-postal-code.html">ZIP Code vs Postal Code</a></li>
+
+</ul>
+
+</div>
+
+<!-- BROWSE PINCODES BY CITY -->
+
+<div class="card">
+
+<h2>Browse Pincodes by Major Cities</h2>
+
+<ul class="city-directory">
+
+<li><a href="city/mumbai.html">Mumbai Pincode</a></li>
+<li><a href="city/delhi.html">Delhi Pincode</a></li>
+<li><a href="city/bangalore.html">Bangalore Pincode</a></li>
+<li><a href="city/hyderabad.html">Hyderabad Pincode</a></li>
+<li><a href="city/chennai.html">Chennai Pincode</a></li>
+<li><a href="city/kolkata.html">Kolkata Pincode</a></li>
+<li><a href="city/pune.html">Pune Pincode</a></li>
+<li><a href="city/ahmedabad.html">Ahmedabad Pincode</a></li>
+<li><a href="city/jaipur.html">Jaipur Pincode</a></li>
+<li><a href="city/lucknow.html">Lucknow Pincode</a></li>
+<li><a href="city/indore.html">Indore Pincode</a></li>
+<li><a href="city/kochi.html">Kochi Pincode</a></li>
+
+</ul>
+
+<p>
+<a href="cities.html">View All Cities →</a>
+</p>
+
+</div>
+
+<!-- FAQ -->
+
+<div class="card faq">
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Can I search postal codes worldwide?</h3>
+
+<p>Yes, our tool supports India, US, UK, Canada, Australia and many more countries.</p>
+
+<h3>Is the credit score tool free?</h3>
+
+<p>Yes, it is completely free and safe. We do not store personal data.</p>
+
+</div>
 
 </div>
 
 <footer>
-  © 2026 Pincode4U.com | All rights reserved
+
+© 2026 Pincode4U.com | All rights reserved
+
 </footer>
+
+<script>
+
+function getLocation(){
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(function(position){
+
+alert("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
+
+});
+
+}else{
+
+alert("Geolocation not supported");
+
+}
+
+}
+
+</script>
+
+<!-- SCHEMA MARKUP -->
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "WebSite",
+ "name": "Pincode4U",
+ "url": "https://www.pincode4u.com",
+ "potentialAction": {
+   "@type": "SearchAction",
+   "target": "https://www.pincode4u.com/search.html?q={search_term_string}",
+   "query-input": "required name=search_term_string"
+ }
+}
+</script>
 
 </body>
 </html>
