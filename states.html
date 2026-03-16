@@ -34,9 +34,14 @@ content="india states pincode, state wise pincode directory, indian postal code 
 
 <h2>All Indian States</h2>
 
-<div id="states-list" class="grid"></div>
+<div id="states-list" class="grid">
+
+<p>Loading states...</p>
 
 </div>
+
+</div>
+
 </div>
 
 <script>
@@ -59,20 +64,36 @@ states.add(state)
 
 }
 
+/* convert to sorted array */
+
+const sortedStates = Array.from(states).sort()
+
 const container = document.getElementById("states-list")
 
-states.forEach(state => {
+if(!container) return
+
+container.innerHTML = ""
+
+/* render states */
+
+sortedStates.forEach(state => {
 
 const slug = state.toLowerCase().replace(/\s+/g,"-")
 
-const a = document.createElement("a")
+const link = document.createElement("a")
 
-a.href = "/state/" + slug + ".html"
-a.textContent = state
+link.href = "/state/" + slug + ".html"
 
-container.appendChild(a)
+link.textContent = state
+
+container.appendChild(link)
 
 })
+
+})
+.catch(err => {
+
+console.error("Failed loading states:", err)
 
 })
 
