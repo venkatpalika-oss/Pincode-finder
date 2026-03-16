@@ -14,6 +14,7 @@ let state = data[pin].state
 let city = data[pin].city
 
 if (!state || state === "NA") continue
+if (!city) continue
 
 state = state.replace(/"/g, "").trim()
 city = city.replace(/"/g, "").trim()
@@ -81,13 +82,31 @@ content="Find all cities and postal PIN codes in ${state}. Browse districts, cit
 
 <div class="card">
 
+<nav class="breadcrumb">
+
+<a href="/">Home</a> >
+<a href="/states.html">States</a> >
+${state}
+
+</nav>
+
 <h2>Cities in ${state}</h2>
+
+<div class="grid">
 
 ${cityLinks}
 
 </div>
 
 </div>
+
+</div>
+
+<footer>
+
+© 2026 Pincode4U.com
+
+</footer>
 
 </body>
 </html>`
