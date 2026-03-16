@@ -1,28 +1,90 @@
-const fs = require("fs");
+const fs = require("fs")
 
-let urls = [];
+const BASE_URL = "https://pincode4u.com"
 
-fs.readdirSync("pincode").forEach(f=>{
-urls.push(`/pincode/${f}`);
-});
+let urls = []
 
-fs.readdirSync("city").forEach(f=>{
-urls.push(`/city/${f}`);
-});
+/* =============================
+STATIC PAGES
+============================= */
 
-fs.readdirSync("state").forEach(f=>{
-urls.push(`/state/${f}`);
-});
+urls.push(`${BASE_URL}/`)
+urls.push(`${BASE_URL}/states.html`)
 
-let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+/* =============================
+STATE PAGES
+============================= */
 
-urls.forEach(url=>{
-xml+=`<url><loc>https://pincode4u.com${url}</loc></url>\n`;
-});
+const stateFiles = fs.readdirSync("state")
 
-xml+=`</urlset>`;
+stateFiles.forEach(file => {
 
-fs.writeFileSync("sitemap.xml",xml);
+if(file.endsWith(".html")){
 
-console.log("sitemap generated");
+urls.push(`${BASE_URL}/state/${file}`)
+
+}
+
+})
+
+/* =============================
+CITY PAGES
+============================= */
+
+stateFiles.forEach(folder => {
+
+const path = `state/${folder}`
+
+if(fs.existsSync(path) && fs.lstatSync(path).isDirectory()){
+
+const cities = fs.readdirSync(path)
+
+cities.forEach(city => {
+
+urls.push(`${BASE_URL}/state/${folder}/${city}`)
+
+})
+
+}
+
+})
+
+/* =============================
+PINCODE PAGES
+============================= */
+
+const pinFiles = fs.readdirSync("pincode")
+
+pinFiles.forEach(pin => {
+
+urls.push(`${BASE_URL}/pincode/${pin}`)
+
+})
+
+/* =============================
+BUILD XML
+============================= */
+
+let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+`
+
+urls.forEach(url => {
+
+xml += `
+<url>
+<loc>${url}</loc>
+<changefreq>weekly</changefreq>
+<priority>0.8</priority>
+</url>
+`
+
+})
+
+xml += `
+</urlset>
+`
+
+fs.writeFileSync("sitemap.xml", xml)
+
+console.log("Sitemap generated with", urls.length, "URLs")
