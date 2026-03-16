@@ -106,6 +106,8 @@ content="Find all postal PIN codes in ${city}, ${state}. Browse post offices and
 
 <h2>Pincodes in ${city}</h2>
 
+<div class="grid">
+
 ${pinLinks}
 
 </div>

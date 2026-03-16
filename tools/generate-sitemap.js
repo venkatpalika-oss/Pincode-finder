@@ -2,18 +2,11 @@ const fs = require("fs")
 
 const BASE_URL = "https://pincode4u.com"
 
-let urls = []
-
 /* =============================
-STATIC PAGES
+STATE SITEMAP
 ============================= */
 
-urls.push(`${BASE_URL}/`)
-urls.push(`${BASE_URL}/states.html`)
-
-/* =============================
-STATE PAGES
-============================= */
+let stateUrls = []
 
 const stateFiles = fs.readdirSync("state")
 
@@ -21,15 +14,39 @@ stateFiles.forEach(file => {
 
 if(file.endsWith(".html")){
 
-urls.push(`${BASE_URL}/state/${file}`)
+stateUrls.push(`${BASE_URL}/state/${file}`)
 
 }
 
 })
 
+let stateXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+`
+
+stateUrls.forEach(url => {
+
+stateXml += `
+<url>
+<loc>${url}</loc>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+`
+
+})
+
+stateXml += `</urlset>`
+
+fs.writeFileSync("sitemap-states.xml", stateXml)
+
+
+
 /* =============================
-CITY PAGES
+CITY SITEMAP
 ============================= */
+
+let cityUrls = []
 
 stateFiles.forEach(folder => {
 
@@ -41,7 +58,7 @@ const cities = fs.readdirSync(path)
 
 cities.forEach(city => {
 
-urls.push(`${BASE_URL}/state/${folder}/${city}`)
+cityUrls.push(`${BASE_URL}/state/${folder}/${city}`)
 
 })
 
@@ -49,42 +66,86 @@ urls.push(`${BASE_URL}/state/${folder}/${city}`)
 
 })
 
-/* =============================
-PINCODE PAGES
-============================= */
-
-const pinFiles = fs.readdirSync("pincode")
-
-pinFiles.forEach(pin => {
-
-urls.push(`${BASE_URL}/pincode/${pin}`)
-
-})
-
-/* =============================
-BUILD XML
-============================= */
-
-let xml = `<?xml version="1.0" encoding="UTF-8"?>
+let cityXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `
 
-urls.forEach(url => {
+cityUrls.forEach(url => {
 
-xml += `
+cityXml += `
 <url>
 <loc>${url}</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 `
 
 })
 
-xml += `
-</urlset>
+cityXml += `</urlset>`
+
+fs.writeFileSync("sitemap-cities.xml", cityXml)
+
+
+
+/* =============================
+PINCODE SITEMAP
+============================= */
+
+let pinUrls = []
+
+const pinFiles = fs.readdirSync("pincode")
+
+pinFiles.forEach(pin => {
+
+pinUrls.push(`${BASE_URL}/pincode/${pin}`)
+
+})
+
+let pinXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `
 
-fs.writeFileSync("sitemap.xml", xml)
+pinUrls.forEach(url => {
 
-console.log("Sitemap generated with", urls.length, "URLs")
+pinXml += `
+<url>
+<loc>${url}</loc>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+`
+
+})
+
+pinXml += `</urlset>`
+
+fs.writeFileSync("sitemap-pincodes.xml", pinXml)
+
+
+
+/* =============================
+SITEMAP INDEX
+============================= */
+
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<sitemap>
+<loc>${BASE_URL}/sitemap-states.xml</loc>
+</sitemap>
+
+<sitemap>
+<loc>${BASE_URL}/sitemap-cities.xml</loc>
+</sitemap>
+
+<sitemap>
+<loc>${BASE_URL}/sitemap-pincodes.xml</loc>
+</sitemap>
+
+</sitemapindex>
+`
+
+fs.writeFileSync("sitemap-index.xml", sitemapIndex)
+
+console.log("Sitemaps generated successfully.")

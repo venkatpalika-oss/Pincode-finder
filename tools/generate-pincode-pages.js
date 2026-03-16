@@ -20,6 +20,30 @@ state = state.replace(/"/g,"").trim()
 const citySlug = city.toLowerCase().replace(/\s+/g,"-")
 const stateSlug = state.toLowerCase().replace(/\s+/g,"-")
 
+/* ===============================
+GENERATE NEARBY PINCODES
+=============================== */
+
+let nearbyLinks = ""
+
+const pinNumber = parseInt(pin)
+
+for(let i = 1; i <= 6; i++){
+
+const nearby = (pinNumber + i).toString()
+
+if(data[nearby]){
+
+nearbyLinks += `<a href="/pincode/${nearby}.html">${nearby}</a>\n`
+
+}
+
+}
+
+/* ===============================
+HTML TEMPLATE
+=============================== */
+
 const html = `<!DOCTYPE html>
 <html lang="en">
 
@@ -35,6 +59,58 @@ content="Pincode ${pin} belongs to ${city}, ${state}. Find post office, location
 
 <link rel="stylesheet" href="/css/style.css">
 
+<!-- =========================
+SCHEMA: POSTAL ADDRESS
+========================= -->
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "PostalAddress",
+ "postalCode": "${pin}",
+ "addressLocality": "${city}",
+ "addressRegion": "${state}",
+ "addressCountry": "IN"
+}
+</script>
+
+<!-- =========================
+SCHEMA: BREADCRUMB
+========================= -->
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+ {
+ "@type": "ListItem",
+ "position": 1,
+ "name": "Home",
+ "item": "https://www.pincode4u.com/"
+ },
+ {
+ "@type": "ListItem",
+ "position": 2,
+ "name": "${state}",
+ "item": "https://www.pincode4u.com/state/${stateSlug}.html"
+ },
+ {
+ "@type": "ListItem",
+ "position": 3,
+ "name": "${city}",
+ "item": "https://www.pincode4u.com/state/${stateSlug}/${citySlug}.html"
+ },
+ {
+ "@type": "ListItem",
+ "position": 4,
+ "name": "${pin}",
+ "item": "https://www.pincode4u.com/pincode/${pin}.html"
+ }
+ ]
+}
+</script>
+
 </head>
 
 <body>
@@ -42,7 +118,6 @@ content="Pincode ${pin} belongs to ${city}, ${state}. Find post office, location
 <header>
 
 <h1>Pincode ${pin}</h1>
-
 <p>${city}, ${state}</p>
 
 </header>
@@ -51,17 +126,48 @@ content="Pincode ${pin} belongs to ${city}, ${state}. Find post office, location
 
 <div class="card">
 
+<nav class="breadcrumb">
+
+<a href="/">Home</a> >
+<a href="/state/${stateSlug}.html">${state}</a> >
+<a href="/state/${stateSlug}/${citySlug}.html">${city}</a> >
+${pin}
+
+</nav>
+
 <h2>Pincode Details</h2>
 
 <p><strong>Pincode:</strong> ${pin}</p>
 
-<p><strong>City:</strong> <a href="/state/${stateSlug}/${citySlug}.html">${city}</a></p>
+<p><strong>City:</strong>
+<a href="/state/${stateSlug}/${citySlug}.html">${city}</a>
+</p>
 
-<p><strong>State:</strong> <a href="/state/${stateSlug}.html">${state}</a></p>
+<p><strong>State:</strong>
+<a href="/state/${stateSlug}.html">${state}</a>
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Nearby Pincodes</h2>
+
+<div class="grid">
+
+${nearbyLinks}
 
 </div>
 
 </div>
+
+</div>
+
+<footer>
+
+© 2026 Pincode4U.com
+
+</footer>
 
 </body>
 </html>`
