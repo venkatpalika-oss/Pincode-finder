@@ -50,25 +50,28 @@ const states = new Set()
 
 for(const pin in data){
 
-states.add(data[pin].state)
+let state = data[pin].state
+
+if(!state || state === "NA") continue
+
+state = state.replace(/"/g,"").trim()
+
+states.add(state)
 
 }
 
-const stateArray = [...states].sort()
+const container = document.getElementById("states-list")
 
-const container = document.getElementById("stateList")
-
-stateArray.forEach(state => {
+states.forEach(state => {
 
 const slug = state.toLowerCase().replace(/\s+/g,"-")
 
-const link = document.createElement("a")
+const a = document.createElement("a")
 
-link.href = "/state/" + slug + ".html"
+a.href = "/state/" + slug + ".html"
+a.textContent = state
 
-link.textContent = state
-
-container.appendChild(link)
+container.appendChild(a)
 
 })
 
