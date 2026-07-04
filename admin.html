@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Service Admin</title>
+<meta name="robots" content="noindex, nofollow">
 <style>
 body{font-family:Arial;padding:20px}
 input,button{padding:10px;margin:5px}
@@ -12,14 +13,25 @@ textarea{width:100%;height:300px}
 
 <h2>Service Data Admin</h2>
 
-<textarea id="json"></textarea>
-<br>
+<button onclick="loadData()">Load Data</button>
 <button onclick="save()">Download Updated JSON</button>
+<p id="status"></p>
+
+<textarea id="json"></textarea>
 
 <script>
-fetch("locations.json")
-.then(r=>r.text())
-.then(t=>json.value=t);
+function loadData(){
+  document.getElementById('status').textContent = 'Loading...';
+  fetch("locations.json")
+  .then(r=>r.text())
+  .then(t=>{
+    json.value = t;
+    document.getElementById('status').textContent = 'Loaded.';
+  })
+  .catch(e=>{
+    document.getElementById('status').textContent = 'Failed to load: ' + e.message;
+  });
+}
 
 function save(){
   const blob=new Blob([json.value],{type:"application/json"});
